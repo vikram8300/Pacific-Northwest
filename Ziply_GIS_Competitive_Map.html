@@ -20,8 +20,8 @@
         }
         .info-panel { max-height: 500px; overflow-y: auto; }
         .stat-card { border-left: 3px solid; }
-        .source-link { color: #0891B2; text-decoration: underline; font-size: 10px; }
-        .source-link:hover { color: #0E7490; }
+        .source-link { color: #16A34A; text-decoration: underline; font-size: 10px; }
+        .source-link:hover { color: #15803D; }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4">
@@ -30,7 +30,7 @@
         <div class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-5 mb-4 text-white">
             <div class="flex justify-between items-center">
                 <div>
-                    <p class="text-cyan-400 text-xs font-medium tracking-wider mb-1">GIS INTELLIGENCE TOOL</p>
+                    <p class="text-green-400 text-xs font-medium tracking-wider mb-1">GIS INTELLIGENCE TOOL</p>
                     <h1 class="text-2xl font-bold">Pacific Northwest Fiber Competitive Map</h1>
                     <p class="text-slate-300 text-sm mt-1">Census tracts with build economics, permits & source links</p>
                 </div>
@@ -49,8 +49,8 @@
                     <div class="flex justify-between items-center mb-3">
                         <div class="flex gap-4 text-sm">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="showZiply" checked class="rounded text-cyan-600">
-                                <span class="w-3 h-3 rounded-full bg-cyan-600"></span> Ziply Fiber
+                                <input type="checkbox" id="showZiply" checked class="rounded text-green-600">
+                                <span class="w-3 h-3 rounded-full bg-green-600"></span> Ziply Fiber
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" id="showHunter" checked class="rounded text-red-600">
@@ -61,8 +61,8 @@
                                 <span class="w-3 h-3 rounded-full bg-amber-500"></span> Fat Beam
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="showEmerald" checked class="rounded text-green-600">
-                                <span class="w-3 h-3 rounded-full bg-green-600"></span> Emerald
+                                <input type="checkbox" id="showEmerald" checked class="rounded text-violet-500">
+                                <span class="w-3 h-3 rounded-full bg-violet-500"></span> Emerald
                             </label>
                         </div>
                         <div class="flex gap-2">
@@ -75,7 +75,7 @@
                             <button onclick="loadCensusTracts('spokane')" class="px-3 py-1 bg-amber-100 text-amber-700 rounded text-xs font-medium hover:bg-amber-200">
                                 Spokane Tracts
                             </button>
-                            <button onclick="loadCensusTracts('portland')" class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded text-xs font-medium hover:bg-cyan-200">
+                            <button onclick="loadCensusTracts('portland')" class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-medium hover:bg-green-200">
                                 Portland Tracts
                             </button>
                             <button onclick="clearCensusTracts()" class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-xs hover:bg-gray-200">
@@ -89,7 +89,7 @@
                         <div id="map"></div>
                         <div id="loadingOverlay" class="loading-overlay hidden">
                             <div class="text-center">
-                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600 mx-auto mb-2"></div>
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
                                 <p class="text-slate-600 text-sm">Loading Census data...</p>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                     <!-- Map Legend -->
                     <div class="mt-3 flex flex-wrap gap-4 text-xs text-slate-600">
                         <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded-full bg-cyan-500 border-2 border-cyan-700"></div>
+                            <div class="w-4 h-4 rounded-full bg-green-500 border-2 border-green-700"></div>
                             <span>Ziply Active</span>
                         </div>
                         <div class="flex items-center gap-2">
@@ -118,7 +118,7 @@
                             <span>Overlap Zone</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded-full bg-green-600 border-2 border-green-800"></div>
+                            <div class="w-4 h-4 rounded-full bg-violet-500 border-2 border-violet-700"></div>
                             <span>Emerald (Local)</span>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                         <p class="text-2xl font-bold text-slate-800" id="hunterCost">$0</p>
                         <p class="text-xs text-slate-400">@ ~$875/passing avg</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm p-4 stat-card border-cyan-500">
+                    <div class="bg-white rounded-xl shadow-sm p-4 stat-card border-green-500">
                         <p class="text-xs text-slate-500 mb-1">Ziply Served Passings</p>
                         <p class="text-2xl font-bold text-slate-800" id="ziplyPriority">0</p>
                         <p class="text-xs text-slate-400">Per FCC BDC data</p>
@@ -186,7 +186,7 @@
                             <span>📍 Spokane, WA</span>
                             <span class="text-xs text-amber-600 font-medium">FAT BEAM</span>
                         </button>
-                        <button onclick="flyTo('portland')" class="w-full text-left px-3 py-2 bg-cyan-50 hover:bg-cyan-100 rounded text-sm">
+                        <button onclick="flyTo('portland')" class="w-full text-left px-3 py-2 bg-green-50 hover:bg-green-100 rounded text-sm">
                             <span>📍 Portland, OR</span>
                         </button>
                         <button onclick="flyTo('overview')" class="w-full text-left px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded text-sm font-medium">
@@ -203,26 +203,42 @@
 
                 <!-- Data Sources Panel -->
                 <div class="bg-slate-800 rounded-xl p-4 text-white">
-                    <h3 class="font-semibold mb-2 text-sm">📊 Live Data Sources</h3>
+                    <h3 class="font-semibold mb-2 text-sm">📊 Live Data Sources & Audit Links</h3>
                     <div class="space-y-1 text-xs">
                         <p class="text-slate-400 font-medium">Hunter (~100K passings total):</p>
                         <a href="https://serving.hunterfiber.com/address-search/" target="_blank" class="block text-red-400 hover:text-red-300 underline">
                             🗺️ Hunter Service Map (live)
                         </a>
-                        <a href="https://broadbandnow.com/Hunter-Communications" target="_blank" class="block text-cyan-400 hover:text-cyan-300 underline">
+                        <a href="https://broadbandnow.com/Hunter-Communications" target="_blank" class="block text-sky-400 hover:text-sky-300 underline">
                             → BroadbandNow (FCC summary)
                         </a>
                         <p class="text-slate-400 font-medium mt-2">Ziply (1.3M customers):</p>
-                        <a href="https://broadbandnow.com/Ziply-Fiber" target="_blank" class="block text-cyan-400 hover:text-cyan-300 underline">
+                        <a href="https://broadbandnow.com/Ziply-Fiber" target="_blank" class="block text-green-400 hover:text-green-300 underline">
                             → BroadbandNow (FCC summary)
                         </a>
                         <p class="text-slate-400 font-medium mt-2">Emerald (Local PBC):</p>
-                        <a href="https://www.emeraldbroadband.com/" target="_blank" class="block text-green-400 hover:text-green-300 underline">
+                        <a href="https://www.emeraldbroadband.com/" target="_blank" class="block text-violet-400 hover:text-violet-300 underline">
                             🗺️ Emerald Service Check
                         </a>
                         <div class="border-t border-slate-600 pt-2 mt-2">
+                            <p class="text-yellow-400 font-medium mb-1">🔗 FCC BDC Audit Links:</p>
+                            <a href="https://broadbandmap.fcc.gov/data-download/nationwide-data" target="_blank" class="block text-sky-400 hover:text-sky-300 underline mb-1">
+                                📥 FCC BDC Raw Data Downloads
+                            </a>
+                            <a href="https://broadbandmap.fcc.gov/location-summary" target="_blank" class="block text-sky-400 hover:text-sky-300 underline mb-1">
+                                📍 FCC Address Lookup Tool
+                            </a>
+                            <a href="https://www.fcc.gov/BroadbandData/filers" target="_blank" class="block text-sky-400 hover:text-sky-300 underline mb-1">
+                                📋 BDC Provider Filing Records
+                            </a>
+                            <p class="text-slate-500 text-[10px] mt-1">Verify any coverage claim at specific addresses</p>
+                        </div>
+                        <div class="border-t border-slate-600 pt-2 mt-2">
                             <p class="text-slate-400">Data: FCC BDC Jun 2025</p>
                             <p class="text-slate-400">Housing: ACS 2020 5-Year</p>
+                            <a href="https://data.census.gov/table?q=housing+units" target="_blank" class="block text-sky-400 hover:text-sky-300 underline text-[10px]">
+                                Census ACS Housing Data →
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -234,13 +250,13 @@
                     <div class="space-y-2 text-xs">
                         <div class="bg-white p-2 rounded border border-amber-100">
                             <p class="font-medium text-slate-700">Salem (Hunter Phase 1):</p>
-                            <a href="https://egov.cityofsalem.net/PACPortal" target="_blank" class="text-cyan-600 underline">PAC Portal</a>
+                            <a href="https://egov.cityofsalem.net/PACPortal" target="_blank" class="text-sky-600 underline">PAC Portal</a>
                             <p class="text-slate-500 mt-1">Search: <span class="font-mono bg-slate-100 px-1">1168 15th St NE</span></p>
                             <p class="text-slate-400 text-[10px]">Source: Salem Reporter 8/15/25</p>
                         </div>
                         <div class="bg-white p-2 rounded border border-amber-100">
                             <p class="font-medium text-slate-700">Eugene (EUGNet builds):</p>
-                            <a href="https://www.eugene-or.gov/3125/Permit-Record-Search" target="_blank" class="text-cyan-600 underline">Eugene Permits</a>
+                            <a href="https://www.eugene-or.gov/3125/Permit-Record-Search" target="_blank" class="text-sky-600 underline">Eugene Permits</a>
                             <p class="text-slate-500 mt-1">Search:</p>
                             <ul class="text-slate-500 ml-2 space-y-0.5">
                                 <li><span class="font-mono bg-slate-100 px-1">44 Broadway</span> (Commerce Ctr)</li>
@@ -251,8 +267,8 @@
                         </div>
                         <div class="bg-white p-2 rounded border border-amber-100">
                             <p class="font-medium text-slate-700">Public Records Request:</p>
-                            <a href="https://www.cityofsalem.net/government/public-records-request" target="_blank" class="text-cyan-600 underline">Salem FOIA</a> •
-                            <a href="https://lanecountyor.nextrequest.com/" target="_blank" class="text-cyan-600 underline">Lane Co.</a>
+                            <a href="https://www.cityofsalem.net/government/public-records-request" target="_blank" class="text-sky-600 underline">Salem FOIA</a> •
+                            <a href="https://lanecountyor.nextrequest.com/" target="_blank" class="text-sky-600 underline">Lane Co.</a>
                             <p class="text-slate-500 mt-1">Request: "Hunter Communications ROW permits 2025"</p>
                         </div>
                     </div>
@@ -284,7 +300,7 @@
                     <p class="text-xs text-red-700 mb-2"><strong>Hunter/Salem:</strong> 7,000 HH target by 2026 per <a href="https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html" target="_blank" class="underline">PRNewswire 5/20/25</a></p>
                     <p class="text-xs text-red-700 mb-2"><strong>Hunter/Eugene:</strong> 49.7% coverage (~104K people) per <a href="https://bestneighborhood.org/fiber-tv-and-internet-eugene-or/" target="_blank" class="underline">BestNeighborhood</a></p>
                     <p class="text-xs text-red-700 mb-2"><strong>Oak Hill Acquisition:</strong> Closed Dec 2025 - accelerating FTTP expansion per <a href="https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" target="_blank" class="underline">Oak Hill</a></p>
-                    <p class="text-xs text-green-700"><strong>Emerald Broadband:</strong> Local PBC competitor in Eugene (River Road, Whiteaker, South Eugene) per <a href="https://www.emeraldbroadband.com/" target="_blank" class="underline">Emerald</a></p>
+                    <p class="text-xs text-violet-700"><strong>Emerald Broadband:</strong> Local PBC competitor in Eugene (River Road, Whiteaker, South Eugene) per <a href="https://www.emeraldbroadband.com/" target="_blank" class="underline">Emerald</a></p>
                 </div>
             </div>
         </div>
@@ -754,9 +770,9 @@
         // Hunter total: ~100,000 passings, 25,000+ customers, 3,000 route miles
         // Ziply total: 1.3M customers across WA/OR/ID/MT (BCE acquired Aug 2025)
         const markets = {
-            seattle: { coords: [47.6062, -122.3321], provider: 'Ziply', name: 'Seattle Metro', passings: '~500K passings', color: '#0891B2', source: 'FCC BDC Jun 2025' },
-            portland: { coords: [45.5152, -122.6784], provider: 'Ziply', name: 'Portland Metro', passings: '~400K passings', color: '#0891B2', source: 'FCC BDC Jun 2025' },
-            boise: { coords: [43.6150, -116.2023], provider: 'Ziply', name: 'Boise', passings: '~120K passings', color: '#0891B2', source: 'FCC BDC Jun 2025' },
+            seattle: { coords: [47.6062, -122.3321], provider: 'Ziply', name: 'Seattle Metro', passings: '~500K passings', color: '#16A34A', source: 'FCC BDC Jun 2025' },
+            portland: { coords: [45.5152, -122.6784], provider: 'Ziply', name: 'Portland Metro', passings: '~400K passings', color: '#16A34A', source: 'FCC BDC Jun 2025' },
+            boise: { coords: [43.6150, -116.2023], provider: 'Ziply', name: 'Boise', passings: '~120K passings', color: '#16A34A', source: 'FCC BDC Jun 2025' },
             salem: { coords: [44.9429, -123.0351], provider: 'Hunter', name: 'Salem (NEW)', passings: '7,000 target by 2026', color: '#DC2626', isNew: true, source: 'PRNewswire 5/20/25' },
             eugene: { coords: [44.0521, -123.0868], provider: 'Hunter', name: 'Eugene', passings: '~104K people (49.7%)', color: '#DC2626', isBattleground: true, source: 'BroadbandNow FCC data' },
             medford: { coords: [42.3265, -122.8756], provider: 'Hunter', name: 'Medford (HQ)', passings: '~30K+ passings', color: '#DC2626', source: 'Hunter HQ market' },
@@ -764,9 +780,9 @@
             grants_pass: { coords: [42.4390, -123.3284], provider: 'Hunter', name: 'Grants Pass', passings: 'Active', color: '#DC2626', source: 'Hunter service area' },
             spokane: { coords: [47.6588, -117.4260], provider: 'Fat Beam', name: 'Spokane', passings: '~50K enterprise', color: '#F59E0B', source: 'Fierce Network' },
             // Emerald Broadband - Local Eugene competitor (Public Benefit Corp, founded 2016)
-            emerald_eugene: { coords: [44.0505, -123.0950], provider: 'Emerald', name: 'Eugene (Local)', passings: 'River Road, Whiteaker, South Eugene', color: '#16A34A', source: 'Emerald Broadband website' },
-            emerald_springfield: { coords: [44.0462, -123.0220], provider: 'Emerald', name: 'Springfield', passings: 'Expanding', color: '#16A34A', source: 'Emerald Broadband' },
-            emerald_oakridge: { coords: [43.7465, -122.4615], provider: 'Emerald', name: 'Oakridge', passings: 'Active', color: '#16A34A', source: 'Emerald Broadband' }
+            emerald_eugene: { coords: [44.0505, -123.0950], provider: 'Emerald', name: 'Eugene (Local)', passings: 'River Road, Whiteaker, South Eugene', color: '#8B5CF6', source: 'Emerald Broadband website' },
+            emerald_springfield: { coords: [44.0462, -123.0220], provider: 'Emerald', name: 'Springfield', passings: 'Expanding', color: '#8B5CF6', source: 'Emerald Broadband' },
+            emerald_oakridge: { coords: [43.7465, -122.4615], provider: 'Emerald', name: 'Oakridge', passings: 'Active', color: '#8B5CF6', source: 'Emerald Broadband' }
         };
 
         // Add market markers with source attribution
@@ -798,7 +814,7 @@
                     <td class="py-2 font-medium">${b.market}</td>
                     <td class="py-2">${b.target}</td>
                     <td class="py-2 font-medium">${b.buildCost ? '$' + b.buildCost + 'M' : 'N/A'}</td>
-                    <td class="py-2"><a href="${b.sourceUrl}" target="_blank" class="text-cyan-600 hover:text-cyan-800 underline text-xs">${b.sourceText}</a></td>
+                    <td class="py-2"><a href="${b.sourceUrl}" target="_blank" class="text-sky-600 hover:text-sky-800 underline text-xs">${b.sourceText}</a></td>
                     <td class="py-2"><a href="${b.permitUrl}" target="_blank" class="text-slate-500 hover:text-slate-700 underline text-xs">${b.permitText}</a></td>
                 </tr>
                 <tr class="bg-slate-50">
@@ -861,7 +877,7 @@
                         stats.hunterPassings += tract.announcedPassings || tract.housingUnits;
                         stats.hunterCost += estBuildCost;
                     } else if (tract.provider === 'Ziply') {
-                        fillColor = '#0891B2'; strokeColor = '#0E7490';
+                        fillColor = '#16A34A'; strokeColor = '#15803D';
                         stats.ziplyPriority += tract.housingUnits;
                     } else if (tract.provider === 'Fat Beam') {
                         fillColor = '#F59E0B'; strokeColor = '#D97706';
@@ -919,7 +935,7 @@
                                 <div style="font-size: 10px; color: #64748B; margin-bottom: 4px;">
                                     <strong>Source:</strong> ${tract.sourceType}
                                 </div>
-                                <a href="${tract.sourceUrl}" target="_blank" style="font-size: 10px; color: #0891B2; text-decoration: underline;">
+                                <a href="${tract.sourceUrl}" target="_blank" style="font-size: 10px; color: #0EA5E9; text-decoration: underline;">
                                     ${tract.sourceText} →
                                 </a>
                             </div>
@@ -943,7 +959,7 @@
                                 ${!tract.sampleAddress && !tract.sampleAddresses ? `
                                     <p style="font-size: 9px; color: #78716C; margin-bottom: 4px;">Search by address in this tract, or file a public records request</p>
                                 ` : ''}
-                                <a href="${data.permitPortal}" target="_blank" style="font-size: 10px; color: #0891B2; text-decoration: underline;">
+                                <a href="${data.permitPortal}" target="_blank" style="font-size: 10px; color: #0EA5E9; text-decoration: underline;">
                                     🔗 ${data.county} County Permit Portal →
                                 </a>
                             </div>
@@ -996,7 +1012,7 @@
                     </div>
                     <div class="pt-2 border-t">
                         <p class="text-xs font-medium text-slate-600 mb-1">Source</p>
-                        <a href="${tract.sourceUrl}" target="_blank" class="text-xs text-cyan-600 underline">${tract.sourceText} →</a>
+                        <a href="${tract.sourceUrl}" target="_blank" class="text-xs text-sky-600 underline">${tract.sourceText} →</a>
                     </div>
                     <p class="text-xs text-slate-500 italic">${tract.notes}</p>
                 </div>
