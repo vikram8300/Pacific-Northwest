@@ -11,7 +11,7 @@
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
         #map { height: 600px; width: 100%; border-radius: 12px; }
         .leaflet-popup-content-wrapper { border-radius: 8px; }
-        .leaflet-popup-content { margin: 12px 16px; min-width: 300px; }
+        .leaflet-popup-content { margin: 12px 16px; min-width: 280px; }
         .loading-overlay {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(255,255,255,0.9); z-index: 1000;
@@ -22,64 +22,149 @@
         .stat-card { border-left: 3px solid; }
         .source-link { color: #16A34A; text-decoration: underline; font-size: 10px; }
         .source-link:hover { color: #15803D; }
+
+        /* Mobile Responsive Styles */
+        .collapsible-header { cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .collapsible-header::after { content: '▼'; font-size: 12px; transition: transform 0.3s; }
+        .collapsible-header.collapsed::after { transform: rotate(-90deg); }
+        .collapsible-content { transition: max-height 0.3s ease-out; overflow: hidden; }
+        .collapsible-content.collapsed { max-height: 0 !important; padding: 0 !important; }
+
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            #map { height: 50vh; min-height: 300px; border-radius: 8px; }
+            .leaflet-popup-content { min-width: 240px; margin: 8px 12px; font-size: 13px; }
+            .mobile-stack { display: flex; flex-direction: column; gap: 12px; }
+            .mobile-full { width: 100% !important; }
+            .mobile-grid-2 { grid-template-columns: repeat(2, 1fr) !important; }
+            .mobile-text-sm { font-size: 12px !important; }
+            .mobile-text-xs { font-size: 10px !important; }
+            .mobile-p-2 { padding: 8px !important; }
+            .mobile-p-3 { padding: 12px !important; }
+            .mobile-gap-2 { gap: 8px !important; }
+            .mobile-hidden { display: none !important; }
+            .mobile-wrap { flex-wrap: wrap !important; }
+            .touch-target { min-height: 44px; min-width: 44px; }
+            .filter-chip { padding: 8px 12px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
+            .tract-btn { padding: 10px 14px; font-size: 11px; border-radius: 8px; }
+        }
+
+        @media (max-width: 480px) {
+            #map { height: 45vh; min-height: 280px; }
+            .mobile-xs-text { font-size: 11px !important; }
+            .stat-value { font-size: 1.25rem !important; }
+        }
+
+        /* Hide scrollbar for tract buttons */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Active state for buttons */
+        .active\:scale-95:active { transform: scale(0.95); }
+        .active\:scale-98:active { transform: scale(0.98); }
+
+        /* Smooth transitions */
+        .transition-transform { transition: transform 0.1s ease-out; }
+        .transition-colors { transition: background-color 0.15s ease-out; }
+
+        /* Fix Leaflet popup on mobile */
+        @media (max-width: 768px) {
+            .leaflet-popup-content-wrapper { max-width: 90vw; }
+            .leaflet-popup-content { max-width: 280px; }
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
+<body class="bg-gray-100 min-h-screen p-4 md:p-4">
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-5 mb-4 text-white">
-            <div class="flex justify-between items-center">
+        <div class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-3 md:p-5 mb-3 md:mb-4 text-white">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                 <div>
-                    <p class="text-green-400 text-xs font-medium tracking-wider mb-1">GIS INTELLIGENCE TOOL</p>
-                    <h1 class="text-2xl font-bold">Pacific Northwest Fiber Competitive Map</h1>
-                    <p class="text-slate-300 text-sm mt-1">Census tracts with build economics, permits & source links</p>
+                    <p class="text-green-400 text-[10px] md:text-xs font-medium tracking-wider mb-1">GIS INTELLIGENCE TOOL</p>
+                    <h1 class="text-lg md:text-2xl font-bold">Pacific Northwest Fiber Map</h1>
+                    <p class="text-slate-300 text-xs md:text-sm mt-1 hidden md:block">Census tracts with build economics, permits & source links</p>
                 </div>
-                <div class="text-right text-sm">
-                    <p class="text-slate-400">Data sources:</p>
-                    <p class="text-white">FCC BDC, City Permits, Press Releases</p>
+                <div class="text-left md:text-right text-xs md:text-sm">
+                    <p class="text-slate-400 inline md:block">Sources: </p>
+                    <p class="text-white inline md:block">FCC BDC, Permits, Press</p>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-12 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4">
             <!-- Map Panel -->
-            <div class="col-span-9">
-                <div class="bg-white rounded-xl shadow-sm p-4">
-                    <!-- Map Controls -->
-                    <div class="flex justify-between items-center mb-3">
-                        <div class="flex gap-4 text-sm">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="showZiply" checked class="rounded text-green-600">
-                                <span class="w-3 h-3 rounded-full bg-green-600"></span> Ziply Fiber
+            <div class="lg:col-span-9">
+                <div class="bg-white rounded-xl shadow-sm p-3 md:p-4">
+                    <!-- Map Controls - Touch Friendly -->
+                    <div class="flex flex-col gap-3 mb-3">
+                        <!-- Provider Filters - Scrollable on Mobile -->
+                        <div class="flex flex-wrap gap-1.5 md:gap-2 overflow-x-auto pb-1">
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-green-50 hover:bg-green-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showZiply" checked class="w-4 h-4 rounded text-green-600">
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-600"></span>
+                                <span class="text-xs font-medium">Ziply</span>
                             </label>
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="showHunter" checked class="rounded text-red-600">
-                                <span class="w-3 h-3 rounded-full bg-red-600"></span> Hunter/Oak Hill
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-red-50 hover:bg-red-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showHunter" checked class="w-4 h-4 rounded text-red-600">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+                                <span class="text-xs font-medium">Hunter</span>
                             </label>
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="showFatbeam" checked class="rounded text-amber-500">
-                                <span class="w-3 h-3 rounded-full bg-amber-500"></span> Fat Beam
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-sky-50 hover:bg-sky-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showQuantum" checked class="w-4 h-4 rounded text-sky-500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                                <span class="text-xs font-medium">Quantum/AT&T</span>
                             </label>
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="showEmerald" checked class="rounded text-violet-500">
-                                <span class="w-3 h-3 rounded-full bg-violet-500"></span> Emerald
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-pink-50 hover:bg-pink-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showEzee" checked class="w-4 h-4 rounded text-pink-500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span>
+                                <span class="text-xs font-medium">Ezee</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-teal-50 hover:bg-teal-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showLightcurve" checked class="w-4 h-4 rounded text-teal-500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+                                <span class="text-xs font-medium">Lightcurve</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-orange-50 hover:bg-orange-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showAstound" checked class="w-4 h-4 rounded text-orange-500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                                <span class="text-xs font-medium">Astound</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-amber-50 hover:bg-amber-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showFatbeam" checked class="w-4 h-4 rounded text-amber-500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                <span class="text-xs font-medium">Fat Beam</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer bg-violet-50 hover:bg-violet-100 px-2 py-1.5 rounded-lg min-h-[36px] transition-colors">
+                                <input type="checkbox" id="showEmerald" checked class="w-4 h-4 rounded text-violet-500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-violet-500"></span>
+                                <span class="text-xs font-medium">Emerald</span>
                             </label>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="loadCensusTracts('eugene')" class="px-3 py-1 bg-red-100 text-red-700 rounded text-xs font-medium hover:bg-red-200">
-                                Eugene Tracts
+                        <!-- Location Buttons - Scrollable on Mobile -->
+                        <div class="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
+                            <button onclick="loadCensusTracts('kent')" class="flex-shrink-0 px-3 py-2 bg-pink-100 text-pink-700 rounded-lg text-sm font-medium hover:bg-pink-200 min-h-[40px] active:scale-95 transition-transform">
+                                🚀 Kent
                             </button>
-                            <button onclick="loadCensusTracts('salem')" class="px-3 py-1 bg-red-100 text-red-700 rounded text-xs font-medium hover:bg-red-200">
-                                Salem Tracts
+                            <button onclick="loadCensusTracts('seattle')" class="flex-shrink-0 px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 min-h-[40px] active:scale-95 transition-transform">
+                                📍 Seattle
                             </button>
-                            <button onclick="loadCensusTracts('spokane')" class="px-3 py-1 bg-amber-100 text-amber-700 rounded text-xs font-medium hover:bg-amber-200">
-                                Spokane Tracts
+                            <button onclick="loadCensusTracts('tacoma')" class="flex-shrink-0 px-3 py-2 bg-teal-100 text-teal-700 rounded-lg text-sm font-medium hover:bg-teal-200 min-h-[40px] active:scale-95 transition-transform">
+                                📍 Tacoma
                             </button>
-                            <button onclick="loadCensusTracts('portland')" class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-medium hover:bg-green-200">
-                                Portland Tracts
+                            <button onclick="loadCensusTracts('eugene')" class="flex-shrink-0 px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 min-h-[40px] active:scale-95 transition-transform">
+                                🎯 Eugene
                             </button>
-                            <button onclick="clearCensusTracts()" class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-xs hover:bg-gray-200">
-                                Clear All
+                            <button onclick="loadCensusTracts('salem')" class="flex-shrink-0 px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 min-h-[40px] active:scale-95 transition-transform">
+                                ⚡ Salem
+                            </button>
+                            <button onclick="loadCensusTracts('portland')" class="flex-shrink-0 px-3 py-2 bg-sky-100 text-sky-700 rounded-lg text-sm font-medium hover:bg-sky-200 min-h-[40px] active:scale-95 transition-transform">
+                                📍 Portland
+                            </button>
+                            <button onclick="loadCensusTracts('spokane')" class="flex-shrink-0 px-3 py-2 bg-amber-100 text-amber-700 rounded-lg text-sm font-medium hover:bg-amber-200 min-h-[40px] active:scale-95 transition-transform">
+                                📍 Spokane
+                            </button>
+                            <button onclick="clearCensusTracts()" class="flex-shrink-0 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-gray-200 min-h-[40px] active:scale-95 transition-transform">
+                                ✕ Clear
                             </button>
                         </div>
                     </div>
@@ -95,131 +180,165 @@
                         </div>
                     </div>
 
-                    <!-- Map Legend -->
-                    <div class="mt-3 flex flex-wrap gap-4 text-xs text-slate-600">
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded-full bg-green-500 border-2 border-green-700"></div>
-                            <span>Ziply Active</span>
+                    <!-- Map Legend - Compact Grid on Mobile -->
+                    <div class="mt-3 grid grid-cols-4 md:grid-cols-6 lg:flex lg:flex-wrap gap-1.5 md:gap-3 text-[9px] md:text-xs text-slate-600">
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500"></div>
+                            <span>Ziply</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded-full bg-red-500 border-2 border-red-700"></div>
-                            <span>Hunter Active</span>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500"></div>
+                            <span>Hunter</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded-full bg-red-500 animate-pulse"></div>
-                            <span>New Expansion</span>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-sky-500"></div>
+                            <span>Quantum</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 bg-red-200 border-2 border-red-500"></div>
-                            <span>Hunter Target Tract</span>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-pink-500"></div>
+                            <span>Ezee</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 bg-purple-200 border-2 border-purple-500 border-dashed"></div>
-                            <span>Overlap Zone</span>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-teal-500"></div>
+                            <span>Lightcurve</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded-full bg-violet-500 border-2 border-violet-700"></div>
-                            <span>Emerald (Local)</span>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-orange-500"></div>
+                            <span>Astound</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-amber-500"></div>
+                            <span>Fat Beam</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-violet-500"></div>
+                            <span>Emerald</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full animate-pulse bg-gradient-to-r from-pink-500 to-red-500"></div>
+                            <span>New Build</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Summary Stats -->
-                <div class="grid grid-cols-4 gap-4 mt-4">
-                    <div class="bg-white rounded-xl shadow-sm p-4 stat-card border-red-500">
-                        <p class="text-xs text-slate-500 mb-1">Hunter Target Passings</p>
-                        <p class="text-2xl font-bold text-slate-800" id="hunterPassings">0</p>
-                        <p class="text-xs text-slate-400">Per press releases</p>
+                <!-- Summary Stats - 2x2 Grid on Mobile -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mt-3 md:mt-4">
+                    <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 stat-card border-red-500">
+                        <p class="text-[10px] md:text-xs text-slate-500 mb-1">Hunter Passings</p>
+                        <a href="https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html" target="_blank" class="block text-xl md:text-2xl font-bold text-slate-800 hover:text-red-600 hover:underline cursor-pointer stat-value" id="hunterPassings">0</a>
+                        <a href="https://broadbandnow.com/Hunter-Communications" target="_blank" class="text-[10px] md:text-xs text-sky-500 hover:text-sky-700 underline">Press releases →</a>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm p-4 stat-card border-red-500">
-                        <p class="text-xs text-slate-500 mb-1">Hunter Est. Build Cost</p>
-                        <p class="text-2xl font-bold text-slate-800" id="hunterCost">$0</p>
-                        <p class="text-xs text-slate-400">@ ~$875/passing avg</p>
+                    <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 stat-card border-red-500">
+                        <p class="text-[10px] md:text-xs text-slate-500 mb-1">Hunter Build Cost</p>
+                        <p class="text-xl md:text-2xl font-bold text-slate-800 stat-value" id="hunterCost">$0</p>
+                        <p class="text-[10px] md:text-xs text-slate-400">~$875/passing</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm p-4 stat-card border-green-500">
-                        <p class="text-xs text-slate-500 mb-1">Ziply Served Passings</p>
-                        <p class="text-2xl font-bold text-slate-800" id="ziplyPriority">0</p>
-                        <p class="text-xs text-slate-400">Per FCC BDC data</p>
+                    <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 stat-card border-green-500">
+                        <p class="text-[10px] md:text-xs text-slate-500 mb-1">Ziply Passings</p>
+                        <a href="https://broadbandmap.fcc.gov/data-download/nationwide-data" target="_blank" class="block text-xl md:text-2xl font-bold text-slate-800 hover:text-green-600 hover:underline cursor-pointer stat-value" id="ziplyPriority">0</a>
+                        <a href="https://broadbandnow.com/Ziply-Fiber" target="_blank" class="text-[10px] md:text-xs text-sky-500 hover:text-sky-700 underline">FCC BDC →</a>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm p-4 stat-card border-purple-500">
-                        <p class="text-xs text-slate-500 mb-1">Overlap Tracts</p>
-                        <p class="text-2xl font-bold text-slate-800" id="overlapCount">0</p>
-                        <p class="text-xs text-slate-400">Competitive zones</p>
+                    <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 stat-card border-purple-500">
+                        <p class="text-[10px] md:text-xs text-slate-500 mb-1">Overlap Tracts</p>
+                        <a href="https://broadbandmap.fcc.gov/location-summary" target="_blank" class="block text-xl md:text-2xl font-bold text-slate-800 hover:text-purple-600 hover:underline cursor-pointer stat-value" id="overlapCount">0</a>
+                        <a href="https://broadbandmap.fcc.gov/" target="_blank" class="text-[10px] md:text-xs text-sky-500 hover:text-sky-700 underline">FCC check →</a>
                     </div>
                 </div>
 
-                <!-- Build Announcements Table with Sources -->
-                <div class="bg-white rounded-xl shadow-sm p-4 mt-4">
-                    <h3 class="font-semibold text-slate-800 mb-2">Announced Builds (Press Release Sources)</h3>
-                    <p class="text-xs text-slate-500 mb-3">⚠️ Passings targets from company announcements, not permit filings. Permit portals require search - see right panel for instructions.</p>
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b text-left text-slate-500">
-                                <th class="pb-2">Provider</th>
-                                <th class="pb-2">Market</th>
-                                <th class="pb-2">Target HH</th>
-                                <th class="pb-2">Est. Build</th>
-                                <th class="pb-2">Press Release</th>
-                                <th class="pb-2">Permit Portal (search)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="buildTable"></tbody>
-                    </table>
+                <!-- Build Announcements Table with Sources - Scrollable on Mobile -->
+                <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 mt-3 md:mt-4">
+                    <div class="collapsible-header mb-2" onclick="toggleCollapsible(this)">
+                        <h3 class="font-semibold text-slate-800 text-sm md:text-base">📋 Announced Builds</h3>
+                        <span class="text-xs text-slate-400 md:hidden">tap to expand</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p class="text-[10px] md:text-xs text-slate-500 mb-3">⚠️ Targets from announcements. Permit portals require search.</p>
+                        <div class="overflow-x-auto -mx-3 px-3">
+                            <table class="w-full text-xs md:text-sm min-w-[600px]">
+                                <thead>
+                                    <tr class="border-b text-left text-slate-500">
+                                        <th class="pb-2 pr-2">Provider</th>
+                                        <th class="pb-2 pr-2">Market</th>
+                                        <th class="pb-2 pr-2">Target</th>
+                                        <th class="pb-2 pr-2">Build $</th>
+                                        <th class="pb-2 pr-2">Source</th>
+                                        <th class="pb-2">Permits</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="buildTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right Panel -->
-            <div class="col-span-3 space-y-4 info-panel">
+            <!-- Right Panel - Collapsible on Mobile -->
+            <div class="lg:col-span-3 space-y-3 md:space-y-4 info-panel">
                 <!-- Quick Jump -->
-                <div class="bg-white rounded-xl shadow-sm p-4">
-                    <h3 class="font-semibold text-slate-800 mb-3 text-sm">Quick Navigation</h3>
-                    <div class="space-y-2">
-                        <button onclick="flyTo('eugene')" class="w-full text-left px-3 py-2 bg-red-50 hover:bg-red-100 rounded text-sm flex justify-between items-center">
-                            <span>🎯 Eugene, OR</span>
-                            <span class="text-xs text-red-600 font-medium">BATTLEGROUND</span>
-                        </button>
-                        <button onclick="flyTo('salem')" class="w-full text-left px-3 py-2 bg-red-50 hover:bg-red-100 rounded text-sm flex justify-between items-center">
-                            <span>⚡ Salem, OR</span>
-                            <span class="text-xs text-red-600 font-medium">NEW BUILD</span>
-                        </button>
-                        <button onclick="flyTo('spokane')" class="w-full text-left px-3 py-2 bg-amber-50 hover:bg-amber-100 rounded text-sm flex justify-between items-center">
-                            <span>📍 Spokane, WA</span>
-                            <span class="text-xs text-amber-600 font-medium">FAT BEAM</span>
-                        </button>
-                        <button onclick="flyTo('portland')" class="w-full text-left px-3 py-2 bg-green-50 hover:bg-green-100 rounded text-sm">
-                            <span>📍 Portland, OR</span>
-                        </button>
-                        <button onclick="flyTo('overview')" class="w-full text-left px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded text-sm font-medium">
-                            🗺️ Full Region View
-                        </button>
+                <div class="bg-white rounded-xl shadow-sm p-3 md:p-4">
+                    <div class="collapsible-header mb-2 md:mb-3" onclick="toggleCollapsible(this)">
+                        <h3 class="font-semibold text-slate-800 text-sm">🗺️ Quick Navigation</h3>
+                        <span class="text-xs text-slate-400 lg:hidden">tap to expand</span>
+                    </div>
+                    <div class="collapsible-content" id="navPanel">
+                        <div class="grid grid-cols-2 lg:grid-cols-1 gap-1.5">
+                            <button onclick="loadCensusTracts('kent')" class="text-left px-2.5 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>🚀 Kent, WA</span>
+                                <span class="text-[9px] text-pink-600 font-medium hidden md:inline">EZEE NEW</span>
+                            </button>
+                            <button onclick="loadCensusTracts('seattle')" class="text-left px-2.5 py-2 bg-green-50 hover:bg-green-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>📍 Seattle</span>
+                                <span class="text-[9px] text-green-600 font-medium hidden md:inline">MULTI</span>
+                            </button>
+                            <button onclick="loadCensusTracts('tacoma')" class="text-left px-2.5 py-2 bg-teal-50 hover:bg-teal-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>📍 Tacoma</span>
+                                <span class="text-[9px] text-teal-600 font-medium hidden md:inline">LIGHTCURVE</span>
+                            </button>
+                            <button onclick="loadCensusTracts('eugene')" class="text-left px-2.5 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>🎯 Eugene</span>
+                                <span class="text-[9px] text-red-600 font-medium hidden md:inline">BATTLE</span>
+                            </button>
+                            <button onclick="loadCensusTracts('salem')" class="text-left px-2.5 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>⚡ Salem</span>
+                                <span class="text-[9px] text-red-600 font-medium hidden md:inline">HUNTER</span>
+                            </button>
+                            <button onclick="loadCensusTracts('portland')" class="text-left px-2.5 py-2 bg-sky-50 hover:bg-sky-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>📍 Portland</span>
+                                <span class="text-[9px] text-sky-600 font-medium hidden md:inline">QUANTUM</span>
+                            </button>
+                            <button onclick="loadCensusTracts('spokane')" class="text-left px-2.5 py-2 bg-amber-50 hover:bg-amber-100 rounded-lg text-sm flex justify-between items-center min-h-[40px] active:scale-98 transition-transform">
+                                <span>📍 Spokane</span>
+                                <span class="text-[9px] text-amber-600 font-medium hidden md:inline">FAT BEAM</span>
+                            </button>
+                            <button onclick="flyTo('overview')" class="text-left px-2.5 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-medium min-h-[40px] active:scale-98 transition-transform">
+                                🗺️ Full Region
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Selected Tract Info -->
-                <div class="bg-white rounded-xl shadow-sm p-4" id="tractInfo">
-                    <h3 class="font-semibold text-slate-800 mb-3 text-sm">Census Tract Details</h3>
-                    <p class="text-slate-500 text-sm">Click a census tract on the map to see build economics</p>
+                <div class="bg-white rounded-xl shadow-sm p-3 md:p-4" id="tractInfo">
+                    <h3 class="font-semibold text-slate-800 mb-2 md:mb-3 text-sm">📊 Census Tract Details</h3>
+                    <p class="text-slate-500 text-xs md:text-sm">Tap a census tract on the map to see build economics</p>
                 </div>
 
                 <!-- Data Sources Panel -->
-                <div class="bg-slate-800 rounded-xl p-4 text-white">
-                    <h3 class="font-semibold mb-2 text-sm">📊 Live Data Sources & Audit Links</h3>
-                    <div class="space-y-1 text-xs">
-                        <p class="text-slate-400 font-medium">Hunter (~100K passings total):</p>
-                        <a href="https://serving.hunterfiber.com/address-search/" target="_blank" class="block text-red-400 hover:text-red-300 underline">
-                            🗺️ Hunter Service Map (live)
-                        </a>
-                        <a href="https://broadbandnow.com/Hunter-Communications" target="_blank" class="block text-sky-400 hover:text-sky-300 underline">
-                            → BroadbandNow (FCC summary)
-                        </a>
-                        <p class="text-slate-400 font-medium mt-2">Ziply (1.3M customers):</p>
-                        <a href="https://broadbandnow.com/Ziply-Fiber" target="_blank" class="block text-green-400 hover:text-green-300 underline">
-                            → BroadbandNow (FCC summary)
-                        </a>
-                        <p class="text-slate-400 font-medium mt-2">Emerald (Local PBC):</p>
-                        <a href="https://www.emeraldbroadband.com/" target="_blank" class="block text-violet-400 hover:text-violet-300 underline">
-                            🗺️ Emerald Service Check
-                        </a>
+                <div class="bg-slate-800 rounded-xl p-3 md:p-4 text-white">
+                    <div class="collapsible-header mb-2" onclick="toggleCollapsible(this)">
+                        <h3 class="font-semibold text-sm">📊 Provider Links</h3>
+                        <span class="text-xs text-slate-400 lg:hidden">tap to expand</span>
+                    </div>
+                    <div class="collapsible-content collapsed lg:!max-h-none lg:!p-0" id="sourcesPanel">
+                        <div class="space-y-1 text-[10px]">
+                        <a href="https://broadbandnow.com/Ziply-Fiber" target="_blank" class="block text-green-400 hover:text-green-300 underline">🟢 Ziply (1.3M subs) →</a>
+                        <a href="https://serving.hunterfiber.com/address-search/" target="_blank" class="block text-red-400 hover:text-red-300 underline">🔴 Hunter Service Map →</a>
+                        <a href="https://www.centurylink.com/fiber/" target="_blank" class="block text-sky-400 hover:text-sky-300 underline">🔵 Quantum/AT&T (acq. Q1 2026) →</a>
+                        <a href="https://ezeefiber.com/" target="_blank" class="block text-pink-400 hover:text-pink-300 underline">🩷 Ezee Fiber ($400M WA build) →</a>
+                        <a href="https://getlightcurve.com/" target="_blank" class="block text-teal-400 hover:text-teal-300 underline">🩵 Lightcurve (160K passings) →</a>
+                        <a href="https://www.astound.com/oregon/" target="_blank" class="block text-orange-400 hover:text-orange-300 underline">🟠 Astound (fmr. Wave) →</a>
+                        <a href="https://www.fatbeamfiber.com/" target="_blank" class="block text-amber-400 hover:text-amber-300 underline">🟡 Fat Beam (Enterprise) →</a>
+                        <a href="https://www.emeraldbroadband.com/" target="_blank" class="block text-violet-400 hover:text-violet-300 underline">🟣 Emerald (Eugene PBC) →</a>
                         <div class="border-t border-slate-600 pt-2 mt-2">
                             <p class="text-yellow-400 font-medium mb-1">🔗 FCC BDC Audit Links:</p>
                             <a href="https://broadbandmap.fcc.gov/data-download/nationwide-data" target="_blank" class="block text-sky-400 hover:text-sky-300 underline mb-1">
@@ -240,73 +359,106 @@
                                 Census ACS Housing Data →
                             </a>
                         </div>
-                    </div>
-                </div>
-
-                <!-- How to Find Permits -->
-                <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
-                    <h3 class="font-semibold text-amber-800 text-sm mb-2">🔎 Finding Permit Documents</h3>
-                    <p class="text-xs text-amber-700 mb-2">Search these confirmed Hunter addresses:</p>
-                    <div class="space-y-2 text-xs">
-                        <div class="bg-white p-2 rounded border border-amber-100">
-                            <p class="font-medium text-slate-700">Salem (Hunter Phase 1):</p>
-                            <a href="https://egov.cityofsalem.net/PACPortal" target="_blank" class="text-sky-600 underline">PAC Portal</a>
-                            <p class="text-slate-500 mt-1">Search: <span class="font-mono bg-slate-100 px-1">1168 15th St NE</span></p>
-                            <p class="text-slate-400 text-[10px]">Source: Salem Reporter 8/15/25</p>
-                        </div>
-                        <div class="bg-white p-2 rounded border border-amber-100">
-                            <p class="font-medium text-slate-700">Eugene (EUGNet builds):</p>
-                            <a href="https://www.eugene-or.gov/3125/Permit-Record-Search" target="_blank" class="text-sky-600 underline">Eugene Permits</a>
-                            <p class="text-slate-500 mt-1">Search:</p>
-                            <ul class="text-slate-500 ml-2 space-y-0.5">
-                                <li><span class="font-mono bg-slate-100 px-1">44 Broadway</span> (Commerce Ctr)</li>
-                                <li><span class="font-mono bg-slate-100 px-1">940 Willamette</span> (Woolworth)</li>
-                                <li><span class="font-mono bg-slate-100 px-1">942 Olive St</span> (RAIN Eugene)</li>
-                            </ul>
-                            <p class="text-slate-400 text-[10px] mt-1">Source: Hunter Downtown Eugene Fiber Project</p>
-                        </div>
-                        <div class="bg-white p-2 rounded border border-amber-100">
-                            <p class="font-medium text-slate-700">Public Records Request:</p>
-                            <a href="https://www.cityofsalem.net/government/public-records-request" target="_blank" class="text-sky-600 underline">Salem FOIA</a> •
-                            <a href="https://lanecountyor.nextrequest.com/" target="_blank" class="text-sky-600 underline">Lane Co.</a>
-                            <p class="text-slate-500 mt-1">Request: "Hunter Communications ROW permits 2025"</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Build Cost Assumptions -->
-                <div class="bg-white rounded-xl shadow-sm p-4">
-                    <h3 class="font-semibold text-slate-800 mb-2 text-sm">Build Cost Assumptions</h3>
-                    <div class="space-y-2 text-xs">
-                        <div class="flex justify-between text-slate-600">
-                            <span>Urban (>2,000 HU/sq mi)</span>
-                            <span class="font-medium">$750/passing</span>
-                        </div>
-                        <div class="flex justify-between text-slate-600">
-                            <span>Suburban (500-2,000)</span>
-                            <span class="font-medium">$875/passing</span>
-                        </div>
-                        <div class="flex justify-between text-slate-600">
-                            <span>Rural (<500)</span>
-                            <span class="font-medium">$1,100/passing</span>
+                <!-- How to Find Permits - Collapsible on Mobile -->
+                <div class="bg-amber-50 rounded-xl p-3 md:p-4 border border-amber-200">
+                    <div class="collapsible-header mb-2" onclick="toggleCollapsible(this)">
+                        <h3 class="font-semibold text-amber-800 text-sm">🔎 Permit Search Guide</h3>
+                        <span class="text-xs text-amber-600 lg:hidden">tap to expand</span>
+                    </div>
+                    <div class="collapsible-content collapsed lg:!max-h-none">
+                        <p class="text-xs text-amber-700 mb-2">Confirmed Hunter addresses:</p>
+                        <div class="space-y-2 text-xs">
+                            <div class="bg-white p-2 rounded border border-amber-100">
+                                <p class="font-medium text-slate-700">Salem (Phase 1):</p>
+                                <a href="https://egov.cityofsalem.net/PACPortal" target="_blank" class="text-sky-600 underline">PAC Portal</a>
+                                <p class="text-slate-500 mt-1">Search: <span class="font-mono bg-slate-100 px-1 text-[10px]">1168 15th St NE</span></p>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-amber-100">
+                                <p class="font-medium text-slate-700">Eugene (EUGNet):</p>
+                                <a href="https://www.eugene-or.gov/3125/Permit-Record-Search" target="_blank" class="text-sky-600 underline">Eugene Permits</a>
+                                <p class="text-slate-500 mt-1 text-[10px]">Try: 44 Broadway, 940 Willamette, 942 Olive St</p>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-amber-100">
+                                <p class="font-medium text-slate-700">Public Records:</p>
+                                <a href="https://www.cityofsalem.net/government/public-records-request" target="_blank" class="text-sky-600 underline text-[10px]">Salem FOIA</a> •
+                                <a href="https://lanecountyor.nextrequest.com/" target="_blank" class="text-sky-600 underline text-[10px]">Lane Co.</a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Strategic Alert -->
-                <div class="bg-red-50 border-l-4 border-red-500 rounded-r-xl p-4">
+                <!-- Build Cost Assumptions - Compact on Mobile -->
+                <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 hidden lg:block">
+                    <h3 class="font-semibold text-slate-800 mb-2 text-sm">💰 Build Cost Assumptions</h3>
+                    <div class="space-y-1 text-xs">
+                        <div class="flex justify-between text-slate-600">
+                            <span>Urban (&gt;2K HU/mi²)</span>
+                            <span class="font-medium">$750</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Suburban (500-2K)</span>
+                            <span class="font-medium">$875</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Rural (&lt;500)</span>
+                            <span class="font-medium">$1,100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Alert - Always Visible -->
+                <div class="bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-r-xl p-3 md:p-4">
                     <h3 class="font-semibold text-red-800 text-sm mb-2">⚠️ Key Intelligence</h3>
-                    <p class="text-xs text-red-700 mb-2"><strong>Hunter Total Network:</strong> ~100K passings, 25K+ customers, 3,000 route miles per <a href="https://broadbandnow.com/Hunter-Communications" target="_blank" class="underline">BroadbandNow</a></p>
-                    <p class="text-xs text-red-700 mb-2"><strong>Hunter/Salem:</strong> 7,000 HH target by 2026 per <a href="https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html" target="_blank" class="underline">PRNewswire 5/20/25</a></p>
-                    <p class="text-xs text-red-700 mb-2"><strong>Hunter/Eugene:</strong> 49.7% coverage (~104K people) per <a href="https://bestneighborhood.org/fiber-tv-and-internet-eugene-or/" target="_blank" class="underline">BestNeighborhood</a></p>
-                    <p class="text-xs text-red-700 mb-2"><strong>Oak Hill Acquisition:</strong> Closed Dec 2025 - accelerating FTTP expansion per <a href="https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" target="_blank" class="underline">Oak Hill</a></p>
-                    <p class="text-xs text-violet-700"><strong>Emerald Broadband:</strong> Local PBC competitor in Eugene (River Road, Whiteaker, South Eugene) per <a href="https://www.emeraldbroadband.com/" target="_blank" class="underline">Emerald</a></p>
+                    <div class="space-y-1 text-[10px] md:text-xs">
+                        <p class="text-pink-700"><strong>🚀 Ezee/Kent:</strong> $400M WA investment, first customer Oct 2025 <a href="https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html" target="_blank" class="underline">→</a></p>
+                        <p class="text-sky-700"><strong>⚠️ AT&T/Quantum:</strong> $5.75B acquisition closing Q1 2026 <a href="https://www.denverpost.com/2025/05/21/att-lumen-fiber-purchase-quantum-centurylink/" target="_blank" class="underline">→</a></p>
+                        <p class="text-red-700"><strong>Hunter/Oak Hill:</strong> Dec 2025 PE acquisition, accelerating FTTP <a href="https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" target="_blank" class="underline">→</a></p>
+                        <p class="text-teal-700"><strong>Lightcurve:</strong> 160K passings, Tacoma HQ, expanding to Yelm/Ellensburg <a href="https://getlightcurve.com/" target="_blank" class="underline">→</a></p>
+                        <p class="text-orange-700"><strong>Astound:</strong> 108-mi Oregon Coast build (AWS funded) <a href="https://www.geekwire.com/2025/astound-powers-up-new-fiber-internet-near-oregon-coast-with-help-from-aws/" target="_blank" class="underline">→</a></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Mobile collapsible panel toggle
+        function toggleCollapsible(header) {
+            const content = header.nextElementSibling;
+            const isCollapsed = content.classList.contains('collapsed');
+
+            if (isCollapsed) {
+                content.classList.remove('collapsed');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                header.classList.remove('collapsed');
+            } else {
+                content.classList.add('collapsed');
+                content.style.maxHeight = '0';
+                header.classList.add('collapsed');
+            }
+        }
+
+        // Initialize collapsible panels on mobile
+        function initMobileCollapsibles() {
+            const isMobile = window.innerWidth < 1024;
+            document.querySelectorAll('.collapsible-content').forEach(content => {
+                if (isMobile && content.classList.contains('collapsed')) {
+                    content.style.maxHeight = '0';
+                } else if (!isMobile) {
+                    content.style.maxHeight = 'none';
+                    content.classList.remove('collapsed');
+                }
+            });
+        }
+
+        // Run on load and resize
+        window.addEventListener('load', initMobileCollapsibles);
+        window.addEventListener('resize', initMobileCollapsibles);
+
         // Initialize map
         const map = L.map('map').setView([45.5, -120.5], 6);
 
@@ -319,6 +471,10 @@
         const hunterLayer = L.layerGroup().addTo(map);
         const fatbeamLayer = L.layerGroup().addTo(map);
         const emeraldLayer = L.layerGroup().addTo(map);
+        const quantumLayer = L.layerGroup().addTo(map);
+        const ezeeLayer = L.layerGroup().addTo(map);
+        const lightcurveLayer = L.layerGroup().addTo(map);
+        const astoundLayer = L.layerGroup().addTo(map);
         const censusLayer = L.layerGroup().addTo(map);
 
         // Stats tracking
@@ -342,8 +498,8 @@
                     {
                         id: '001000',
                         name: 'Downtown Eugene',
-                        coords: [[44.062, -123.105], [44.062, -123.075], [44.042, -123.075], [44.042, -123.105]],
-                        housingUnits: 3420,
+                        coords: [[44.070, -123.115], [44.070, -123.065], [44.040, -123.065], [44.040, -123.115]],
+                        housingUnits: 8420,
                         density: 'urban',
                         costPerPassing: 750,
                         provider: 'Hunter',
@@ -358,8 +514,8 @@
                     {
                         id: '001100',
                         name: 'University District',
-                        coords: [[44.052, -123.085], [44.052, -123.055], [44.032, -123.055], [44.032, -123.085]],
-                        housingUnits: 4850,
+                        coords: [[44.060, -123.065], [44.060, -123.015], [44.030, -123.015], [44.030, -123.065]],
+                        housingUnits: 11850,
                         density: 'urban',
                         costPerPassing: 750,
                         provider: 'Contested',
@@ -373,8 +529,8 @@
                     {
                         id: '001200',
                         name: 'South Eugene',
-                        coords: [[44.035, -123.105], [44.035, -123.065], [44.015, -123.065], [44.015, -123.105]],
-                        housingUnits: 2180,
+                        coords: [[44.040, -123.115], [44.040, -123.055], [44.005, -123.055], [44.005, -123.115]],
+                        housingUnits: 9180,
                         density: 'suburban',
                         costPerPassing: 875,
                         provider: 'Hunter',
@@ -388,8 +544,8 @@
                     {
                         id: '001300',
                         name: 'West Eugene / Bethel',
-                        coords: [[44.065, -123.145], [44.065, -123.105], [44.045, -123.105], [44.045, -123.145]],
-                        housingUnits: 3650,
+                        coords: [[44.085, -123.175], [44.085, -123.115], [44.050, -123.115], [44.050, -123.175]],
+                        housingUnits: 10650,
                         density: 'suburban',
                         costPerPassing: 875,
                         provider: 'Ziply',
@@ -402,24 +558,25 @@
                     },
                     {
                         id: '001400',
-                        name: 'Santa Clara',
-                        coords: [[44.085, -123.125], [44.085, -123.085], [44.065, -123.085], [44.065, -123.125]],
-                        housingUnits: 2890,
+                        name: 'Santa Clara / River Road',
+                        coords: [[44.115, -123.145], [44.115, -123.085], [44.080, -123.085], [44.080, -123.145]],
+                        housingUnits: 8890,
                         density: 'suburban',
                         costPerPassing: 875,
-                        provider: 'Ziply',
-                        permitStatus: 'Active Service',
-                        sourceType: 'FCC BDC',
-                        sourceUrl: 'https://broadbandmap.fcc.gov/',
-                        sourceText: 'FCC National Broadband Map',
-                        notes: 'Ziply legacy market per FCC BDC Nov 2025 data.',
+                        provider: 'Emerald',
+                        permitStatus: 'PBC Build',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://www.emeraldbroadband.com/',
+                        sourceText: 'Emerald Broadband - River Road expansion',
+                        notes: 'Emerald Broadband PBC local expansion. Community-focused fiber.',
+                        isNew: true,
                         overlap: false
                     },
                     {
                         id: '001600',
                         name: 'Springfield West',
-                        coords: [[44.062, -123.055], [44.062, -123.015], [44.042, -123.015], [44.042, -123.055]],
-                        housingUnits: 4120,
+                        coords: [[44.065, -123.015], [44.065, -122.965], [44.035, -122.965], [44.035, -123.015]],
+                        housingUnits: 9120,
                         density: 'suburban',
                         costPerPassing: 850,
                         provider: 'Hunter',
@@ -432,9 +589,9 @@
                     },
                     {
                         id: '001700',
-                        name: 'Springfield Central',
-                        coords: [[44.062, -123.015], [44.062, -122.975], [44.042, -122.975], [44.042, -123.015]],
-                        housingUnits: 3580,
+                        name: 'Springfield Central / Gateway',
+                        coords: [[44.065, -122.965], [44.065, -122.905], [44.035, -122.905], [44.035, -122.965]],
+                        housingUnits: 8580,
                         density: 'suburban',
                         costPerPassing: 850,
                         provider: 'Hunter',
@@ -443,6 +600,21 @@
                         sourceUrl: 'https://hunterfiber.com/springfield/',
                         sourceText: 'Hunter Springfield service page',
                         notes: 'Part of Hunter Springfield expansion per company website.',
+                        overlap: false
+                    },
+                    {
+                        id: '001800',
+                        name: 'North Eugene / Cal Young',
+                        coords: [[44.085, -123.085], [44.085, -123.025], [44.055, -123.025], [44.055, -123.085]],
+                        housingUnits: 7250,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply fiber per FCC data',
+                        notes: 'Established Ziply market. Higher-income residential.',
                         overlap: false
                     }
                 ]
@@ -456,8 +628,8 @@
                     {
                         id: '000100',
                         name: 'Downtown Salem',
-                        coords: [[44.948, -123.045], [44.948, -123.015], [44.928, -123.015], [44.928, -123.045]],
-                        housingUnits: 2150,
+                        coords: [[44.955, -123.055], [44.955, -123.005], [44.925, -123.005], [44.925, -123.055]],
+                        housingUnits: 7150,
                         density: 'urban',
                         costPerPassing: 775,
                         provider: 'None',
@@ -465,15 +637,15 @@
                         sourceType: 'FCC BDC',
                         sourceUrl: 'https://broadbandmap.fcc.gov/',
                         sourceText: 'FCC Map shows no fiber coverage downtown',
-                        notes: 'State capital. No fiber provider active per FCC BDC.',
+                        notes: 'State capital. No fiber provider active per FCC BDC. Ripe for entry.',
                         overlap: false
                     },
                     {
                         id: '000200',
-                        name: 'Morningside',
-                        coords: [[44.968, -123.015], [44.968, -122.975], [44.948, -122.975], [44.948, -123.015]],
-                        housingUnits: 1850,
-                        announcedPassings: 1800,
+                        name: 'NE Salem / Morningside',
+                        coords: [[44.985, -123.005], [44.985, -122.945], [44.950, -122.945], [44.950, -123.005]],
+                        housingUnits: 8850,
+                        announcedPassings: 2500,
                         density: 'suburban',
                         costPerPassing: 850,
                         provider: 'Hunter',
@@ -489,9 +661,9 @@
                     },
                     {
                         id: '000300',
-                        name: 'Highland',
-                        coords: [[44.948, -122.975], [44.948, -122.935], [44.928, -122.935], [44.928, -122.975]],
-                        housingUnits: 1620,
+                        name: 'Highland / East Salem',
+                        coords: [[44.955, -122.945], [44.955, -122.885], [44.920, -122.885], [44.920, -122.945]],
+                        housingUnits: 7620,
                         density: 'suburban',
                         costPerPassing: 875,
                         provider: 'Hunter',
@@ -505,9 +677,9 @@
                     },
                     {
                         id: '000400',
-                        name: 'Grant',
-                        coords: [[44.978, -122.995], [44.978, -122.955], [44.958, -122.955], [44.958, -122.995]],
-                        housingUnits: 1480,
+                        name: 'Grant / Four Corners',
+                        coords: [[45.015, -123.015], [45.015, -122.955], [44.980, -122.955], [44.980, -123.015]],
+                        housingUnits: 6480,
                         density: 'suburban',
                         costPerPassing: 875,
                         provider: 'Hunter',
@@ -521,25 +693,24 @@
                     },
                     {
                         id: '000500',
-                        name: 'Faye Wright',
-                        coords: [[44.998, -123.025], [44.998, -122.985], [44.978, -122.985], [44.978, -123.025]],
-                        housingUnits: 2050,
+                        name: 'South Salem',
+                        coords: [[44.925, -123.055], [44.925, -122.995], [44.890, -122.995], [44.890, -123.055]],
+                        housingUnits: 8050,
                         density: 'suburban',
                         costPerPassing: 850,
-                        provider: 'Hunter',
-                        permitStatus: 'ANNOUNCED - Phase 2',
-                        sourceType: 'Press Release',
-                        sourceUrl: 'https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html',
-                        sourceText: 'PRNewswire 5/20/25: "Faye Wright" listed as target neighborhood',
-                        notes: 'Hunter Phase 2 per PRNewswire announcement.',
-                        isNew: true,
+                        provider: 'None',
+                        permitStatus: 'Potential Phase 3',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'No fiber per FCC - natural expansion area',
+                        notes: 'Not yet announced. Higher-income area - potential Phase 3.',
                         overlap: false
                     },
                     {
                         id: '000600',
                         name: 'West Salem',
-                        coords: [[44.948, -123.085], [44.948, -123.045], [44.928, -123.045], [44.928, -123.085]],
-                        housingUnits: 3250,
+                        coords: [[44.970, -123.105], [44.970, -123.055], [44.930, -123.055], [44.930, -123.105]],
+                        housingUnits: 9250,
                         density: 'suburban',
                         costPerPassing: 900,
                         provider: 'None',
@@ -547,14 +718,14 @@
                         sourceType: 'FCC BDC',
                         sourceUrl: 'https://broadbandmap.fcc.gov/',
                         sourceText: 'No fiber coverage per FCC BDC',
-                        notes: 'Not in Hunter announced neighborhoods. Potential future target.',
+                        notes: 'Across Willamette River. Not in Hunter announced neighborhoods.',
                         overlap: false
                     },
                     {
                         id: '000800',
                         name: 'Keizer',
-                        coords: [[45.005, -123.035], [45.005, -122.995], [44.985, -122.995], [44.985, -123.035]],
-                        housingUnits: 4120,
+                        coords: [[45.025, -123.045], [45.025, -122.985], [44.985, -122.985], [44.985, -123.045]],
+                        housingUnits: 11120,
                         density: 'suburban',
                         costPerPassing: 825,
                         provider: 'None',
@@ -562,7 +733,7 @@
                         sourceType: 'FCC BDC',
                         sourceUrl: 'https://broadbandmap.fcc.gov/',
                         sourceText: 'Adjacent city - no fiber per FCC',
-                        notes: 'Natural expansion market. Not yet announced.',
+                        notes: 'Natural expansion market for Hunter. Not yet announced.',
                         overlap: false
                     }
                 ]
@@ -576,8 +747,8 @@
                     {
                         id: '000100',
                         name: 'Downtown Spokane',
-                        coords: [[47.665, -117.435], [47.665, -117.395], [47.645, -117.395], [47.645, -117.435]],
-                        housingUnits: 2850,
+                        coords: [[47.680, -117.455], [47.680, -117.385], [47.640, -117.385], [47.640, -117.455]],
+                        housingUnits: 8850,
                         density: 'urban',
                         costPerPassing: 725,
                         provider: 'Fat Beam + Ziply',
@@ -591,8 +762,8 @@
                     {
                         id: '000200',
                         name: 'South Hill',
-                        coords: [[47.645, -117.415], [47.645, -117.375], [47.625, -117.375], [47.625, -117.415]],
-                        housingUnits: 4250,
+                        coords: [[47.645, -117.435], [47.645, -117.365], [47.605, -117.365], [47.605, -117.435]],
+                        housingUnits: 12250,
                         density: 'suburban',
                         costPerPassing: 850,
                         provider: 'Ziply',
@@ -604,10 +775,25 @@
                         overlap: false
                     },
                     {
+                        id: '000300',
+                        name: 'North Spokane',
+                        coords: [[47.720, -117.455], [47.720, -117.385], [47.680, -117.385], [47.680, -117.455]],
+                        housingUnits: 9450,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply coverage per FCC',
+                        notes: 'Established Ziply residential market.',
+                        overlap: false
+                    },
+                    {
                         id: '000400',
                         name: 'Spokane Valley',
-                        coords: [[47.675, -117.365], [47.675, -117.305], [47.655, -117.305], [47.655, -117.365]],
-                        housingUnits: 5620,
+                        coords: [[47.695, -117.385], [47.695, -117.285], [47.650, -117.285], [47.650, -117.385]],
+                        housingUnits: 15620,
                         density: 'suburban',
                         costPerPassing: 825,
                         provider: 'Fat Beam',
@@ -622,8 +808,8 @@
                     {
                         id: '000500',
                         name: 'Liberty Lake',
-                        coords: [[47.675, -117.185], [47.675, -117.125], [47.655, -117.125], [47.655, -117.185]],
-                        housingUnits: 3450,
+                        coords: [[47.695, -117.195], [47.695, -117.105], [47.650, -117.105], [47.650, -117.195]],
+                        housingUnits: 8450,
                         density: 'suburban',
                         costPerPassing: 900,
                         provider: 'Fat Beam',
@@ -631,8 +817,23 @@
                         sourceType: 'Company Website',
                         sourceUrl: 'https://www.fatbeamfiber.com/locations/spokane-wa',
                         sourceText: 'Fat Beam Spokane/CDA service page',
-                        notes: 'Fat Beam expansion market per company website.',
+                        notes: 'Fat Beam expansion market per company website. Tech hub growth.',
                         isNew: true,
+                        overlap: false
+                    },
+                    {
+                        id: '000600',
+                        name: 'Airway Heights',
+                        coords: [[47.680, -117.565], [47.680, -117.505], [47.640, -117.505], [47.640, -117.565]],
+                        housingUnits: 5250,
+                        density: 'suburban',
+                        costPerPassing: 900,
+                        provider: 'None',
+                        permitStatus: 'Underserved',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Limited fiber per FCC data',
+                        notes: 'Near Fairchild AFB. Expansion opportunity.',
                         overlap: false
                     }
                 ]
@@ -645,9 +846,9 @@
                 tracts: [
                     {
                         id: '004100',
-                        name: 'Downtown Portland',
-                        coords: [[45.525, -122.685], [45.525, -122.665], [45.510, -122.665], [45.510, -122.685]],
-                        housingUnits: 8500,
+                        name: 'Downtown Portland / Pearl',
+                        coords: [[45.540, -122.710], [45.540, -122.660], [45.505, -122.660], [45.505, -122.710]],
+                        housingUnits: 18500,
                         density: 'urban',
                         costPerPassing: 700,
                         provider: 'Ziply',
@@ -659,10 +860,25 @@
                         overlap: false
                     },
                     {
+                        id: '004200',
+                        name: 'NE Portland / Rose City',
+                        coords: [[45.565, -122.660], [45.565, -122.595], [45.530, -122.595], [45.530, -122.660]],
+                        housingUnits: 14200,
+                        density: 'urban',
+                        costPerPassing: 775,
+                        provider: 'Quantum',
+                        permitStatus: 'Partial Coverage',
+                        sourceType: 'BroadbandNow',
+                        sourceUrl: 'https://broadbandnow.com/Oregon/Portland',
+                        sourceText: 'Quantum/CenturyLink fiber in NE Portland',
+                        notes: '⚠️ Quantum/AT&T market. AT&T acquiring Q1 2026.',
+                        overlap: true
+                    },
+                    {
                         id: '004300',
                         name: 'Beaverton',
-                        coords: [[45.495, -122.815], [45.495, -122.775], [45.475, -122.775], [45.475, -122.815]],
-                        housingUnits: 7850,
+                        coords: [[45.510, -122.835], [45.510, -122.765], [45.470, -122.765], [45.470, -122.835]],
+                        housingUnits: 16850,
                         density: 'suburban',
                         costPerPassing: 800,
                         provider: 'Ziply',
@@ -676,9 +892,9 @@
                     },
                     {
                         id: '004400',
-                        name: 'Hillsboro',
-                        coords: [[45.535, -122.995], [45.535, -122.945], [45.515, -122.945], [45.515, -122.995]],
-                        housingUnits: 9200,
+                        name: 'Hillsboro / Intel',
+                        coords: [[45.555, -123.015], [45.555, -122.935], [45.510, -122.935], [45.510, -123.015]],
+                        housingUnits: 22200,
                         density: 'suburban',
                         costPerPassing: 825,
                         provider: 'Ziply',
@@ -688,6 +904,411 @@
                         sourceText: 'Ziply expansion in Intel corridor',
                         notes: 'Intel corridor. Major Ziply investment area per FCC data.',
                         isNew: true,
+                        overlap: false
+                    },
+                    {
+                        id: '004500',
+                        name: 'SE Portland / Hawthorne',
+                        coords: [[45.520, -122.660], [45.520, -122.595], [45.480, -122.595], [45.480, -122.660]],
+                        housingUnits: 15800,
+                        density: 'urban',
+                        costPerPassing: 750,
+                        provider: 'Contested',
+                        permitStatus: 'Multiple Providers',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply + Quantum both present',
+                        notes: 'Contested market. Dense residential.',
+                        overlap: true
+                    },
+                    {
+                        id: '004600',
+                        name: 'Tigard / Lake Oswego',
+                        coords: [[45.475, -122.795], [45.475, -122.725], [45.420, -122.725], [45.420, -122.795]],
+                        housingUnits: 19500,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply coverage per FCC',
+                        notes: 'Affluent suburban market. Strong Ziply presence.',
+                        overlap: false
+                    },
+                    {
+                        id: '004700',
+                        name: 'Gresham',
+                        coords: [[45.525, -122.485], [45.525, -122.415], [45.485, -122.415], [45.485, -122.485]],
+                        housingUnits: 14200,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply coverage per FCC',
+                        notes: 'East Portland suburb. Growing market.',
+                        overlap: false
+                    },
+                    {
+                        id: '004800',
+                        name: 'N Portland / St Johns',
+                        coords: [[45.605, -122.755], [45.605, -122.695], [45.565, -122.695], [45.565, -122.755]],
+                        housingUnits: 11500,
+                        density: 'suburban',
+                        costPerPassing: 825,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply fiber per FCC',
+                        notes: 'North Portland growth area.',
+                        overlap: false
+                    }
+                ]
+            },
+            kent: {
+                county: 'King',
+                state: 'Washington',
+                fips: '53033',
+                permitPortal: 'https://permitcenter.kentwa.gov/',
+                tracts: [
+                    {
+                        id: '029200',
+                        name: 'Downtown Kent',
+                        coords: [[47.395, -122.265], [47.395, -122.215], [47.365, -122.215], [47.365, -122.265]],
+                        housingUnits: 8250,
+                        density: 'suburban',
+                        costPerPassing: 825,
+                        provider: 'Ezee',
+                        permitStatus: 'ACTIVE BUILD - First Customer Oct 2025',
+                        sourceType: 'Press Release',
+                        sourceUrl: 'https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html',
+                        sourceText: 'PRNewswire 10/22/25: First customer connected in Kent',
+                        sampleAddress: 'E Meeker St, Kent WA',
+                        notes: '🚀 EZEE FIBER HQ MARKET. $400M WA investment. Up to 8 Gbps residential fiber.',
+                        isNew: true,
+                        overlap: false
+                    },
+                    {
+                        id: '029300',
+                        name: 'Kent East Hill',
+                        coords: [[47.415, -122.215], [47.415, -122.165], [47.385, -122.165], [47.385, -122.215]],
+                        housingUnits: 11820,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ezee',
+                        permitStatus: 'Construction Underway',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://ezeefiber.com/cities/wa/kent/',
+                        sourceText: 'Ezee Fiber Kent service page',
+                        notes: 'Active Ezee buildout. High-density residential target.',
+                        isNew: true,
+                        overlap: false
+                    },
+                    {
+                        id: '029400',
+                        name: 'Kent West Valley',
+                        coords: [[47.405, -122.305], [47.405, -122.265], [47.365, -122.265], [47.365, -122.305]],
+                        housingUnits: 7650,
+                        density: 'suburban',
+                        costPerPassing: 875,
+                        provider: 'Ziply',
+                        permitStatus: 'Existing Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply legacy footprint per FCC data',
+                        notes: 'Ziply incumbent. Ezee entering market with overbuild.',
+                        overlap: true
+                    },
+                    {
+                        id: '029500',
+                        name: 'Des Moines',
+                        coords: [[47.415, -122.335], [47.415, -122.295], [47.385, -122.295], [47.385, -122.335]],
+                        housingUnits: 6450,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ezee',
+                        permitStatus: 'Expansion Target',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://ezeefiber.com/',
+                        sourceText: 'Ezee Fiber expansion markets',
+                        notes: '🚀 EZEE EXPANSION. Adjacent to Kent launch market.',
+                        isNew: true,
+                        overlap: false
+                    },
+                    {
+                        id: '029600',
+                        name: 'Auburn North',
+                        coords: [[47.335, -122.255], [47.335, -122.205], [47.305, -122.205], [47.305, -122.255]],
+                        housingUnits: 8920,
+                        density: 'suburban',
+                        costPerPassing: 875,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply fiber coverage per FCC',
+                        notes: 'Ziply incumbent market south of Kent.',
+                        overlap: false
+                    },
+                    {
+                        id: '029700',
+                        name: 'Federal Way',
+                        coords: [[47.335, -122.355], [47.335, -122.295], [47.295, -122.295], [47.295, -122.355]],
+                        housingUnits: 12500,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Contested',
+                        permitStatus: 'Multiple Providers',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply + Quantum coverage overlap',
+                        notes: 'Contested market. Ziply and Quantum both present.',
+                        overlap: true
+                    }
+                ]
+            },
+            seattle: {
+                county: 'King',
+                state: 'Washington',
+                fips: '53033',
+                permitPortal: 'https://cosaccela.seattle.gov/portal/',
+                tracts: [
+                    {
+                        id: '007100',
+                        name: 'Downtown Seattle',
+                        coords: [[47.620, -122.355], [47.620, -122.325], [47.595, -122.325], [47.595, -122.355]],
+                        housingUnits: 15200,
+                        density: 'urban',
+                        costPerPassing: 700,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Dense fiber coverage per FCC data',
+                        notes: 'Core Ziply urban market. High-rise residential & commercial.',
+                        overlap: false
+                    },
+                    {
+                        id: '007200',
+                        name: 'Capitol Hill / First Hill',
+                        coords: [[47.635, -122.325], [47.635, -122.285], [47.605, -122.285], [47.605, -122.325]],
+                        housingUnits: 18500,
+                        density: 'urban',
+                        costPerPassing: 725,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Dense fiber coverage per FCC data',
+                        notes: 'Core Ziply urban market. High-density residential.',
+                        overlap: false
+                    },
+                    {
+                        id: '007400',
+                        name: 'University District',
+                        coords: [[47.680, -122.335], [47.680, -122.285], [47.645, -122.285], [47.645, -122.335]],
+                        housingUnits: 14200,
+                        density: 'urban',
+                        costPerPassing: 750,
+                        provider: 'Contested',
+                        permitStatus: 'Multiple Providers',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply + Quantum both show coverage',
+                        notes: 'UW student housing dense. Ziply vs Quantum/AT&T overlap.',
+                        overlap: true
+                    },
+                    {
+                        id: '010800',
+                        name: 'North Seattle / Northgate',
+                        coords: [[47.735, -122.365], [47.735, -122.305], [47.695, -122.305], [47.695, -122.365]],
+                        housingUnits: 16450,
+                        density: 'suburban',
+                        costPerPassing: 825,
+                        provider: 'Astound',
+                        permitStatus: 'Partial Coverage',
+                        sourceType: 'BroadbandNow',
+                        sourceUrl: 'https://broadbandnow.com/Washington/Seattle',
+                        sourceText: 'Astound (fmr. Wave) N Seattle presence',
+                        notes: 'Astound legacy Wave footprint. Some Ziply overlap.',
+                        overlap: true
+                    },
+                    {
+                        id: '011200',
+                        name: 'South Seattle / Rainier Valley',
+                        coords: [[47.575, -122.315], [47.575, -122.255], [47.525, -122.255], [47.525, -122.315]],
+                        housingUnits: 12850,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Quantum',
+                        permitStatus: 'Partial Coverage',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Quantum (CenturyLink) fiber per FCC',
+                        notes: 'Legacy CenturyLink fiber. AT&T acquiring Q1 2026.',
+                        overlap: false
+                    },
+                    {
+                        id: '007600',
+                        name: 'Ballard / Fremont',
+                        coords: [[47.685, -122.405], [47.685, -122.355], [47.655, -122.355], [47.655, -122.405]],
+                        housingUnits: 11200,
+                        density: 'urban',
+                        costPerPassing: 775,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply fiber coverage per FCC',
+                        notes: 'Strong Ziply market. Growing tech worker population.',
+                        overlap: false
+                    },
+                    {
+                        id: '007800',
+                        name: 'Queen Anne / Magnolia',
+                        coords: [[47.655, -122.405], [47.655, -122.355], [47.620, -122.355], [47.620, -122.405]],
+                        housingUnits: 9800,
+                        density: 'urban',
+                        costPerPassing: 800,
+                        provider: 'Ziply',
+                        permitStatus: 'Active Service',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply coverage per FCC data',
+                        notes: 'Established Ziply residential market.',
+                        overlap: false
+                    },
+                    {
+                        id: '011500',
+                        name: 'West Seattle',
+                        coords: [[47.585, -122.405], [47.585, -122.355], [47.545, -122.355], [47.545, -122.405]],
+                        housingUnits: 13500,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Contested',
+                        permitStatus: 'Multiple Providers',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Ziply + Quantum overlap',
+                        notes: 'Contested market with bridge access issues.',
+                        overlap: true
+                    }
+                ]
+            },
+            tacoma: {
+                county: 'Pierce',
+                state: 'Washington',
+                fips: '53053',
+                permitPortal: 'https://tacomaatlas.com/',
+                tracts: [
+                    {
+                        id: '061300',
+                        name: 'Downtown Tacoma',
+                        coords: [[47.275, -122.475], [47.275, -122.425], [47.240, -122.425], [47.240, -122.475]],
+                        housingUnits: 9850,
+                        density: 'urban',
+                        costPerPassing: 775,
+                        provider: 'Lightcurve',
+                        permitStatus: 'Active - HQ Market',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://getlightcurve.com/',
+                        sourceText: 'Lightcurve HQ - Tacoma core market',
+                        notes: '🏠 LIGHTCURVE HQ MARKET. 160K total passings company-wide.',
+                        overlap: false
+                    },
+                    {
+                        id: '061500',
+                        name: 'Tacoma North End / Proctor',
+                        coords: [[47.305, -122.495], [47.305, -122.445], [47.270, -122.445], [47.270, -122.495]],
+                        housingUnits: 11250,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Lightcurve',
+                        permitStatus: 'Active Service',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://getlightcurve.com/',
+                        sourceText: 'Lightcurve residential fiber',
+                        notes: 'Established Lightcurve (fmr. Rainier Connect) market.',
+                        overlap: false
+                    },
+                    {
+                        id: '061600',
+                        name: 'Tacoma East / Fircrest',
+                        coords: [[47.265, -122.425], [47.265, -122.375], [47.230, -122.375], [47.230, -122.425]],
+                        housingUnits: 8450,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Lightcurve',
+                        permitStatus: 'Active Service',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://getlightcurve.com/',
+                        sourceText: 'Lightcurve fiber per company site',
+                        notes: 'Core Lightcurve residential area.',
+                        overlap: false
+                    },
+                    {
+                        id: '062000',
+                        name: 'Lakewood',
+                        coords: [[47.195, -122.535], [47.195, -122.475], [47.155, -122.475], [47.155, -122.535]],
+                        housingUnits: 14680,
+                        density: 'suburban',
+                        costPerPassing: 875,
+                        provider: 'Quantum',
+                        permitStatus: 'Legacy CenturyLink',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'CenturyLink fiber per FCC data',
+                        notes: 'Quantum (CenturyLink) legacy. AT&T acquisition Q1 2026.',
+                        overlap: false
+                    },
+                    {
+                        id: '061700',
+                        name: 'Puyallup',
+                        coords: [[47.205, -122.325], [47.205, -122.265], [47.165, -122.265], [47.165, -122.325]],
+                        housingUnits: 12920,
+                        density: 'suburban',
+                        costPerPassing: 850,
+                        provider: 'Ezee',
+                        permitStatus: 'ACTIVE BUILD',
+                        sourceType: 'Company Website',
+                        sourceUrl: 'https://ezeefiber.com/',
+                        sourceText: 'Ezee Fiber expansion target',
+                        sampleAddress: 'Puyallup Ave',
+                        notes: '🚀 EZEE EXPANSION. Part of $400M WA investment.',
+                        isNew: true,
+                        overlap: false
+                    },
+                    {
+                        id: '061800',
+                        name: 'University Place',
+                        coords: [[47.235, -122.575], [47.235, -122.515], [47.195, -122.515], [47.195, -122.575]],
+                        housingUnits: 10500,
+                        density: 'suburban',
+                        costPerPassing: 875,
+                        provider: 'Contested',
+                        permitStatus: 'Multiple Providers',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'Lightcurve + Quantum overlap',
+                        notes: 'Contested market. Lightcurve expanding vs Quantum incumbent.',
+                        overlap: true
+                    },
+                    {
+                        id: '062100',
+                        name: 'South Tacoma / Parkland',
+                        coords: [[47.155, -122.475], [47.155, -122.415], [47.115, -122.415], [47.115, -122.475]],
+                        housingUnits: 11200,
+                        density: 'suburban',
+                        costPerPassing: 900,
+                        provider: 'Quantum',
+                        permitStatus: 'Partial Coverage',
+                        sourceType: 'FCC BDC',
+                        sourceUrl: 'https://broadbandmap.fcc.gov/',
+                        sourceText: 'CenturyLink/Quantum per FCC',
+                        notes: 'PLU area. Quantum legacy, potential Ezee expansion target.',
                         overlap: false
                     }
                 ]
@@ -751,6 +1372,62 @@
                 permitText: 'Spokane Permits',
                 color: 'amber',
                 quote: '"24.5 miles of metro fiber in the Spokane Valley"'
+            },
+            {
+                provider: 'Ezee',
+                market: 'Kent, WA',
+                target: '$400M WA investment',
+                targetNum: null,
+                buildCost: 400,
+                costPer: null,
+                sourceUrl: 'https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html',
+                sourceText: 'PRNewswire 10/22/25',
+                permitUrl: 'https://permitcenter.kentwa.gov/',
+                permitText: 'Kent Permits',
+                color: 'pink',
+                quote: '"First customer connected in Kent, WA... up to 8 Gbps residential fiber"'
+            },
+            {
+                provider: 'Lightcurve',
+                market: 'Tacoma/Pierce Co',
+                target: '160K passings total',
+                targetNum: 160000,
+                buildCost: null,
+                costPer: null,
+                sourceUrl: 'https://getlightcurve.com/',
+                sourceText: 'Lightcurve Website',
+                permitUrl: 'https://tacomaatlas.com/',
+                permitText: 'Tacoma Permits',
+                color: 'teal',
+                quote: 'Tacoma-based, expanding to Yelm, Ellensburg 2026'
+            },
+            {
+                provider: 'Quantum/AT&T',
+                market: 'Portland/Seattle',
+                target: 'AT&T acquiring Q1 2026',
+                targetNum: null,
+                buildCost: 5750,
+                costPer: null,
+                sourceUrl: 'https://www.denverpost.com/2025/05/21/att-lumen-fiber-purchase-quantum-centurylink/',
+                sourceText: 'Denver Post 5/21/25',
+                permitUrl: 'https://www.portlandoregon.gov/bds/',
+                permitText: 'Portland BDS',
+                color: 'sky',
+                quote: '"AT&T to pay $5.75B for Lumen consumer fiber assets"'
+            },
+            {
+                provider: 'Astound',
+                market: 'Oregon Coast',
+                target: '108-mi fiber build',
+                targetNum: null,
+                buildCost: null,
+                costPer: null,
+                sourceUrl: 'https://www.geekwire.com/2025/astound-powers-up-new-fiber-internet-near-oregon-coast-with-help-from-aws/',
+                sourceText: 'GeekWire 2025',
+                permitUrl: 'https://www.co.tillamook.or.us/planning',
+                permitText: 'Tillamook Planning',
+                color: 'orange',
+                quote: 'AWS-funded Oregon Coast rural build'
             }
         ];
 
@@ -766,20 +1443,55 @@
             });
         }
 
-        // Market markers - REAL DATA from FCC BDC & BroadbandNow (Jan 2026)
+        // Market markers - REAL DATA from FCC BDC & BroadbandNow (Feb 2026)
         // Hunter total: ~100,000 passings, 25,000+ customers, 3,000 route miles
         // Ziply total: 1.3M customers across WA/OR/ID/MT (BCE acquired Aug 2025)
         const markets = {
+            // ZIPLY FIBER - Green (#16A34A)
             seattle: { coords: [47.6062, -122.3321], provider: 'Ziply', name: 'Seattle Metro', passings: '~500K passings', color: '#16A34A', source: 'FCC BDC Jun 2025' },
             portland: { coords: [45.5152, -122.6784], provider: 'Ziply', name: 'Portland Metro', passings: '~400K passings', color: '#16A34A', source: 'FCC BDC Jun 2025' },
             boise: { coords: [43.6150, -116.2023], provider: 'Ziply', name: 'Boise', passings: '~120K passings', color: '#16A34A', source: 'FCC BDC Jun 2025' },
+            bellevue: { coords: [47.6101, -122.2015], provider: 'Ziply', name: 'Bellevue/Eastside', passings: 'Strong coverage', color: '#16A34A', source: 'FCC BDC' },
+            everett: { coords: [47.9790, -122.2021], provider: 'Ziply', name: 'Everett', passings: 'Active', color: '#16A34A', source: 'FCC BDC' },
+
+            // HUNTER COMMUNICATIONS - Red (#DC2626)
             salem: { coords: [44.9429, -123.0351], provider: 'Hunter', name: 'Salem (NEW)', passings: '7,000 target by 2026', color: '#DC2626', isNew: true, source: 'PRNewswire 5/20/25' },
             eugene: { coords: [44.0521, -123.0868], provider: 'Hunter', name: 'Eugene', passings: '~104K people (49.7%)', color: '#DC2626', isBattleground: true, source: 'BroadbandNow FCC data' },
             medford: { coords: [42.3265, -122.8756], provider: 'Hunter', name: 'Medford (HQ)', passings: '~30K+ passings', color: '#DC2626', source: 'Hunter HQ market' },
             klamath: { coords: [42.2249, -121.7817], provider: 'Hunter', name: 'Klamath Falls', passings: 'Active', color: '#DC2626', source: 'Hunter service area' },
             grants_pass: { coords: [42.4390, -123.3284], provider: 'Hunter', name: 'Grants Pass', passings: 'Active', color: '#DC2626', source: 'Hunter service area' },
+
+            // QUANTUM FIBER / AT&T - Sky Blue (#0EA5E9) - Being acquired by AT&T Q1 2026
+            quantum_portland_ne: { coords: [45.5450, -122.6200], provider: 'Quantum', name: 'NE Portland', passings: 'Up to 8 Gbps', color: '#0EA5E9', source: 'BroadbandNow', notes: 'AT&T acquiring Q1 2026' },
+            quantum_portland_se: { coords: [45.4950, -122.6100], provider: 'Quantum', name: 'SE Portland', passings: 'Rose City Park area', color: '#0EA5E9', source: 'BroadbandNow' },
+            quantum_seattle: { coords: [47.6250, -122.3100], provider: 'Quantum', name: 'Seattle (North)', passings: 'Partial coverage', color: '#0EA5E9', source: 'FCC BDC' },
+            quantum_tacoma: { coords: [47.2529, -122.4443], provider: 'Quantum', name: 'Tacoma', passings: 'Legacy CenturyLink fiber', color: '#0EA5E9', source: 'FCC BDC' },
+
+            // EZEE FIBER - Pink (#EC4899) - $400M WA investment, expanding Puget Sound
+            ezee_kent: { coords: [47.3809, -122.2348], provider: 'Ezee', name: 'Kent (HQ)', passings: 'First customer Oct 2025', color: '#EC4899', isNew: true, source: 'PRNewswire 10/22/25' },
+            ezee_desmoines: { coords: [47.4018, -122.3245], provider: 'Ezee', name: 'Des Moines', passings: 'Expanding', color: '#EC4899', isNew: true, source: 'Ezee Fiber' },
+            ezee_puyallup: { coords: [47.1854, -122.2929], provider: 'Ezee', name: 'Puyallup', passings: 'Active build', color: '#EC4899', isNew: true, source: 'Ezee Fiber' },
+            ezee_algona: { coords: [47.2787, -122.2518], provider: 'Ezee', name: 'Algona/Pacific', passings: 'Construction started', color: '#EC4899', isNew: true, source: 'Ezee Fiber blog' },
+
+            // LIGHTCURVE - Teal (#14B8A6) - 160K passings, Tacoma-based
+            lightcurve_tacoma: { coords: [47.2529, -122.4643], provider: 'Lightcurve', name: 'Tacoma (HQ)', passings: '~120K passings', color: '#14B8A6', source: 'Lightcurve website' },
+            lightcurve_eatonville: { coords: [46.8676, -122.2687], provider: 'Lightcurve', name: 'Eatonville', passings: 'Active', color: '#14B8A6', source: 'Lightcurve' },
+            lightcurve_centralia: { coords: [46.7162, -122.9543], provider: 'Lightcurve', name: 'Centralia/Chehalis', passings: 'Expanding', color: '#14B8A6', source: 'SouthSoundBiz' },
+            lightcurve_yelm: { coords: [46.9418, -122.6059], provider: 'Lightcurve', name: 'Yelm', passings: 'Upgrade planned 2026', color: '#14B8A6', isNew: true, source: 'Lightcurve' },
+            lightcurve_ellensburg: { coords: [46.9965, -120.5478], provider: 'Lightcurve', name: 'Ellensburg', passings: 'New fiber launch', color: '#14B8A6', isNew: true, source: 'Lightcurve blog' },
+
+            // ASTOUND (fmr. Wave) - Orange (#F97316) - Oregon Coast/suburban
+            astound_hillsboro: { coords: [45.5229, -122.9898], provider: 'Astound', name: 'Hillsboro', passings: 'Partial coverage', color: '#F97316', source: 'BroadbandNow' },
+            astound_tillamook: { coords: [45.4562, -123.8428], provider: 'Astound', name: 'Tillamook', passings: '108-mi fiber build', color: '#F97316', isNew: true, source: 'GeekWire' },
+            astound_depoe_bay: { coords: [44.8082, -124.0631], provider: 'Astound', name: 'Depoe Bay', passings: 'Oregon Coast', color: '#F97316', source: 'Astound' },
+            astound_seattle_n: { coords: [47.6862, -122.3521], provider: 'Astound', name: 'N Seattle', passings: '~51K in Portland area', color: '#F97316', source: 'BroadbandNow' },
+
+            // FAT BEAM - Amber (#F59E0B) - Enterprise focus
             spokane: { coords: [47.6588, -117.4260], provider: 'Fat Beam', name: 'Spokane', passings: '~50K enterprise', color: '#F59E0B', source: 'Fierce Network' },
-            // Emerald Broadband - Local Eugene competitor (Public Benefit Corp, founded 2016)
+            spokane_valley: { coords: [47.6732, -117.2394], provider: 'Fat Beam', name: 'Spokane Valley', passings: '24.5 mi fiber (EMAN)', color: '#F59E0B', isNew: true, source: 'Fierce Network' },
+            liberty_lake: { coords: [47.6743, -117.1181], provider: 'Fat Beam', name: 'Liberty Lake', passings: 'Enterprise expanding', color: '#F59E0B', source: 'Fat Beam' },
+
+            // EMERALD BROADBAND - Violet (#8B5CF6) - Local Eugene PBC
             emerald_eugene: { coords: [44.0505, -123.0950], provider: 'Emerald', name: 'Eugene (Local)', passings: 'River Road, Whiteaker, South Eugene', color: '#8B5CF6', source: 'Emerald Broadband website' },
             emerald_springfield: { coords: [44.0462, -123.0220], provider: 'Emerald', name: 'Springfield', passings: 'Expanding', color: '#8B5CF6', source: 'Emerald Broadband' },
             emerald_oakridge: { coords: [43.7465, -122.4615], provider: 'Emerald', name: 'Oakridge', passings: 'Active', color: '#8B5CF6', source: 'Emerald Broadband' }
@@ -788,22 +1500,38 @@
         // Add market markers with source attribution
         Object.entries(markets).forEach(([key, m]) => {
             const marker = L.marker(m.coords, { icon: createMarkerIcon(m.color, m.isNew, m.isBattleground) });
+            const providerLinks = {
+                'Hunter': '<a href="https://serving.hunterfiber.com/address-search/" target="_blank" style="font-size: 10px; color: #DC2626; text-decoration: underline;">Check Hunter service map →</a>',
+                'Ezee': '<a href="https://ezeefiber.com/cities/wa/kent/" target="_blank" style="font-size: 10px; color: #EC4899; text-decoration: underline;">Check Ezee availability →</a>',
+                'Lightcurve': '<a href="https://getlightcurve.com/" target="_blank" style="font-size: 10px; color: #14B8A6; text-decoration: underline;">Check Lightcurve →</a>',
+                'Quantum': '<a href="https://www.centurylink.com/fiber/" target="_blank" style="font-size: 10px; color: #0EA5E9; text-decoration: underline;">⚠️ AT&T acquiring Q1 2026 →</a>',
+                'Astound': '<a href="https://www.astound.com/oregon/" target="_blank" style="font-size: 10px; color: #F97316; text-decoration: underline;">Check Astound →</a>'
+            };
             const popupHtml = `
                 <div style="min-width: 200px;">
-                    <div style="font-weight: 700; font-size: 14px; color: ${m.color};">${m.provider}</div>
+                    <div style="font-weight: 700; font-size: 14px; color: ${m.color};">${m.provider}${m.provider === 'Quantum' ? ' / AT&T' : ''}</div>
                     <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${m.name}</div>
                     <div style="font-size: 12px; color: #1E293B;">📊 ${m.passings}</div>
+                    ${m.notes ? `<div style="font-size: 10px; color: #F59E0B; margin-top: 4px;">⚠️ ${m.notes}</div>` : ''}
                     <div style="font-size: 10px; color: #64748B; margin-top: 4px; border-top: 1px solid #E2E8F0; padding-top: 4px;">
                         Source: ${m.source || 'FCC BDC'}
                     </div>
-                    ${m.provider === 'Hunter' ? '<a href="https://serving.hunterfiber.com/address-search/" target="_blank" style="font-size: 10px; color: #DC2626; text-decoration: underline;">Check address on Hunter map →</a>' : ''}
+                    ${providerLinks[m.provider] || ''}
                 </div>
             `;
             marker.bindPopup(popupHtml);
-            if (m.provider === 'Ziply') ziplyLayer.addLayer(marker);
-            else if (m.provider === 'Hunter') hunterLayer.addLayer(marker);
-            else if (m.provider === 'Emerald') emeraldLayer.addLayer(marker);
-            else fatbeamLayer.addLayer(marker);
+            // Route to appropriate layer
+            switch(m.provider) {
+                case 'Ziply': ziplyLayer.addLayer(marker); break;
+                case 'Hunter': hunterLayer.addLayer(marker); break;
+                case 'Emerald': emeraldLayer.addLayer(marker); break;
+                case 'Quantum': quantumLayer.addLayer(marker); break;
+                case 'Ezee': ezeeLayer.addLayer(marker); break;
+                case 'Lightcurve': lightcurveLayer.addLayer(marker); break;
+                case 'Astound': astoundLayer.addLayer(marker); break;
+                case 'Fat Beam': fatbeamLayer.addLayer(marker); break;
+                default: fatbeamLayer.addLayer(marker);
+            }
         });
 
         // Populate build table with sources
@@ -829,14 +1557,21 @@
         document.getElementById('showHunter').addEventListener('change', e => e.target.checked ? map.addLayer(hunterLayer) : map.removeLayer(hunterLayer));
         document.getElementById('showFatbeam').addEventListener('change', e => e.target.checked ? map.addLayer(fatbeamLayer) : map.removeLayer(fatbeamLayer));
         document.getElementById('showEmerald').addEventListener('change', e => e.target.checked ? map.addLayer(emeraldLayer) : map.removeLayer(emeraldLayer));
+        document.getElementById('showQuantum').addEventListener('change', e => e.target.checked ? map.addLayer(quantumLayer) : map.removeLayer(quantumLayer));
+        document.getElementById('showEzee').addEventListener('change', e => e.target.checked ? map.addLayer(ezeeLayer) : map.removeLayer(ezeeLayer));
+        document.getElementById('showLightcurve').addEventListener('change', e => e.target.checked ? map.addLayer(lightcurveLayer) : map.removeLayer(lightcurveLayer));
+        document.getElementById('showAstound').addEventListener('change', e => e.target.checked ? map.addLayer(astoundLayer) : map.removeLayer(astoundLayer));
 
-        // Fly to locations
+        // Fly to locations - optimized zoom levels to show all census tracts
         const locations = {
-            eugene: { coords: [44.0521, -123.0868], zoom: 12 },
-            salem: { coords: [44.9429, -123.0351], zoom: 12 },
-            spokane: { coords: [47.6588, -117.4260], zoom: 11 },
-            portland: { coords: [45.5152, -122.6784], zoom: 11 },
-            overview: { coords: [45.5, -120.5], zoom: 6 }
+            eugene: { coords: [44.0521, -123.0550], zoom: 12 },
+            salem: { coords: [44.9600, -123.0000], zoom: 11 },
+            spokane: { coords: [47.6588, -117.3260], zoom: 11 },
+            portland: { coords: [45.5152, -122.8000], zoom: 11 },
+            seattle: { coords: [47.6300, -122.3400], zoom: 11 },
+            kent: { coords: [47.3700, -122.2600], zoom: 11 },
+            tacoma: { coords: [47.2200, -122.4500], zoom: 11 },
+            overview: { coords: [46.5, -121.5], zoom: 6 }
         };
 
         function flyTo(loc) {
@@ -881,6 +1616,16 @@
                         stats.ziplyPriority += tract.housingUnits;
                     } else if (tract.provider === 'Fat Beam') {
                         fillColor = '#F59E0B'; strokeColor = '#D97706';
+                    } else if (tract.provider === 'Ezee') {
+                        fillColor = '#EC4899'; strokeColor = '#DB2777';
+                    } else if (tract.provider === 'Lightcurve') {
+                        fillColor = '#14B8A6'; strokeColor = '#0D9488';
+                    } else if (tract.provider === 'Quantum') {
+                        fillColor = '#0EA5E9'; strokeColor = '#0284C7';
+                    } else if (tract.provider === 'Astound') {
+                        fillColor = '#F97316'; strokeColor = '#EA580C';
+                    } else if (tract.provider === 'Emerald') {
+                        fillColor = '#8B5CF6'; strokeColor = '#7C3AED';
                     } else {
                         fillColor = '#6B7280'; strokeColor = '#4B5563';
                     }
