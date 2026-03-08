@@ -193,6 +193,7 @@
             <button class="tab-btn py-3 px-4 text-sm text-slate-500 whitespace-nowrap" onclick="switchTab('builds')">Build Pipeline</button>
             <button class="tab-btn py-3 px-4 text-sm text-slate-500 whitespace-nowrap" onclick="switchTab('overlap')">Overlap Analysis</button>
             <button class="tab-btn py-3 px-4 text-sm text-slate-500 whitespace-nowrap" onclick="switchTab('consolidation')">Consolidation Candidates</button>
+            <button class="tab-btn py-3 px-4 text-sm text-slate-500 whitespace-nowrap" onclick="switchTab('ortowns')">Oregon Towns</button>
         </div>
 
         <!-- ========== TAB 1: GIS MAP ========== -->
@@ -596,6 +597,70 @@
                 </div>
             </div>
         </div>
+
+        <!-- ========== TAB 6: OREGON TOWNS ========== -->
+        <div id="tab-ortowns" class="tab-content">
+            <div class="bg-gradient-to-r from-emerald-800 via-teal-700 to-cyan-800 rounded-xl p-4 mt-4 text-white">
+                <div class="flex items-center gap-2 mb-3">
+                    <h2 class="font-bold text-lg">Oregon Towns — Fiber Activity</h2>
+                    <span class="px-2 py-0.5 bg-white/20 rounded text-[10px] font-medium">FCC BDC DATA</span>
+                </div>
+                <p class="text-teal-200 text-xs mb-4">Town-level analysis of fiber deployments across Oregon. Aggregated from FCC BDC June 2025 block group data. Click a row to expand and see the busiest census block groups.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-teal-200 text-[10px] mb-1">Oregon Towns</p>
+                        <p class="font-bold text-2xl" id="orTownCount">--</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-teal-200 text-[10px] mb-1">Total Housing Units</p>
+                        <p class="font-bold text-2xl" id="orTotalHU">--</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-teal-200 text-[10px] mb-1">Fiber Providers Active</p>
+                        <p class="font-bold text-2xl" id="orProviderCount">--</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-3">
+                        <p class="text-teal-200 text-[10px] mb-1">Block Groups w/ Fiber</p>
+                        <p class="font-bold text-2xl" id="orTotalBGs">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metro filter -->
+            <div class="flex flex-wrap gap-2 mt-4 mb-2">
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-300" onclick="filterORTowns('all')">All Metros</button>
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border" onclick="filterORTowns('Portland Metro')">Portland Metro</button>
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border" onclick="filterORTowns('Willamette Valley')">Willamette Valley</button>
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border" onclick="filterORTowns('Southern Oregon')">Southern Oregon</button>
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border" onclick="filterORTowns('Central Oregon')">Central Oregon</button>
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border" onclick="filterORTowns('Oregon Coast')">Oregon Coast</button>
+                <button class="or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border" onclick="filterORTowns('Eastern Oregon')">Eastern Oregon</button>
+            </div>
+
+            <!-- Town table -->
+            <div class="bg-white rounded-xl border mt-2 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead>
+                            <tr class="bg-slate-50 border-b text-left">
+                                <th class="p-3 font-semibold text-slate-600"></th>
+                                <th class="p-3 font-semibold text-slate-600">Town</th>
+                                <th class="p-3 font-semibold text-slate-600">County</th>
+                                <th class="p-3 font-semibold text-slate-600">Metro</th>
+                                <th class="p-3 font-semibold text-slate-600 text-right">Est. HH</th>
+                                <th class="p-3 font-semibold text-slate-600 text-right">Block Groups</th>
+                                <th class="p-3 font-semibold text-slate-600 text-center">Density</th>
+                                <th class="p-3 font-semibold text-slate-600">Active Providers</th>
+                                <th class="p-3 font-semibold text-slate-600 text-right">Total Fiber BSLs</th>
+                                <th class="p-3 font-semibold text-slate-600 text-center">Overlap</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orTownsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Calculation Modal -->
@@ -749,13 +814,14 @@
         document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); b.classList.add('text-slate-500'); });
         document.getElementById('tab-' + tabId).classList.add('active');
         var tabBtns = document.querySelectorAll('.tab-btn');
-        var tabMap = { map: 0, profiles: 1, builds: 2, overlap: 3, consolidation: 4 };
+        var tabMap = { map: 0, profiles: 1, builds: 2, overlap: 3, consolidation: 4, ortowns: 5 };
         if (tabBtns[tabMap[tabId]]) {
             tabBtns[tabMap[tabId]].classList.add('active');
             tabBtns[tabMap[tabId]].classList.remove('text-slate-500');
         }
         if (tabId === 'map') setTimeout(function() { map.invalidateSize(); }, 100);
         if (tabId === 'consolidation') renderConsolidationTab();
+        if (tabId === 'ortowns') renderORTownsTab();
     }
 
     // ================================================================
@@ -1172,12 +1238,101 @@
     // BDC LAYER RENDERING
     // ================================================================
     var bdcProviderConfig = {
-        ziply: { color: '#22C55E', label: 'Ziply', data: null },
-        lumen: { color: '#6366F1', label: 'Lumen', data: null },
-        hunter: { color: '#EF4444', label: 'Hunter', data: null },
-        astound: { color: '#F97316', label: 'Astound', data: null },
-        tds: { color: '#06B6D4', label: 'TDS', data: null }
+        ziply: { color: '#22C55E', label: 'Ziply Fiber', data: null },
+        lumen: { color: '#6366F1', label: 'Lumen/CenturyLink', data: null },
+        hunter: { color: '#EF4444', label: 'Hunter Communications', data: null },
+        astound: { color: '#F97316', label: 'Astound (Wave)', data: null },
+        tds: { color: '#06B6D4', label: 'TDS Telecom', data: null }
     };
+
+    // Cross-provider index: GEOID → { provider: { bsls, blocks, hu100, pop100, ... } }
+    var bdcBlockGroupIndex = {};
+
+    function buildBDCIndex() {
+        bdcBlockGroupIndex = {};
+        Object.keys(bdcProviderConfig).forEach(function(key) {
+            var cfg = bdcProviderConfig[key];
+            if (!cfg.data || !cfg.data.features) return;
+            cfg.data.features.forEach(function(f) {
+                var id = f.properties.id;
+                if (!id) return;
+                if (!bdcBlockGroupIndex[id]) {
+                    bdcBlockGroupIndex[id] = {
+                        state: f.properties.state,
+                        county: f.properties.county,
+                        hu100: f.properties.hu100 || 0,
+                        pop100: f.properties.pop100 || 0,
+                        areaLandSqKm: f.properties.areaLandSqKm || 0,
+                        providers: {}
+                    };
+                }
+                bdcBlockGroupIndex[id].providers[key] = {
+                    bsls: f.properties.bsls || 0,
+                    blocks: f.properties.blocks || 0,
+                    coveragePct: f.properties.coveragePct || 0
+                };
+            });
+        });
+    }
+
+    function buildBDCPopupHTML(providerKey, f) {
+        var id = f.properties.id || 'N/A';
+        var p = f.properties;
+        var idx = bdcBlockGroupIndex[id];
+        var huPerSqKm = p.areaLandSqKm > 0 ? Math.round((p.hu100 || 0) / p.areaLandSqKm) : 0;
+        var densityClass = huPerSqKm > 400 ? 'Urban' : huPerSqKm > 100 ? 'Suburban' : 'Rural';
+        var densityColor = huPerSqKm > 400 ? '#059669' : huPerSqKm > 100 ? '#D97706' : '#DC2626';
+
+        var html = '<div style="font-family:Inter,sans-serif;font-size:12px;min-width:240px;">';
+        html += '<div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#1E293B;">' + (p.county || '') + ' County, ' + (p.state || '') + '</div>';
+        html += '<div style="color:#64748B;font-size:11px;margin-bottom:6px;">Block Group: ' + id + '</div>';
+        html += '<div style="display:flex;gap:12px;margin-bottom:8px;">';
+        html += '<div><span style="font-size:11px;color:#64748B;">Housing Units</span><br><strong>' + (p.hu100 || 0).toLocaleString() + '</strong></div>';
+        html += '<div><span style="font-size:11px;color:#64748B;">Population</span><br><strong>' + (p.pop100 || 0).toLocaleString() + '</strong></div>';
+        html += '<div><span style="font-size:11px;color:#64748B;">Density</span><br><strong style="color:' + densityColor + ';">' + densityClass + '</strong> <span style="font-size:10px;color:#94A3B8;">(' + huPerSqKm + ' HU/km²)</span></div>';
+        html += '</div>';
+
+        // Provider BSL table
+        html += '<div style="border-top:1px solid #E2E8F0;padding-top:6px;margin-top:2px;">';
+        html += '<div style="font-weight:600;font-size:11px;margin-bottom:4px;color:#475569;">Fiber Providers in this Block Group:</div>';
+        html += '<table style="width:100%;font-size:11px;border-collapse:collapse;">';
+        html += '<tr style="color:#94A3B8;font-size:10px;"><td>Provider</td><td style="text-align:right;">BSLs</td><td style="text-align:right;">Blocks</td><td style="text-align:right;">Coverage</td></tr>';
+
+        if (idx && idx.providers) {
+            var provKeys = Object.keys(idx.providers).sort(function(a, b) {
+                return (idx.providers[b].bsls || 0) - (idx.providers[a].bsls || 0);
+            });
+            provKeys.forEach(function(pk) {
+                var prov = idx.providers[pk];
+                var cfg = bdcProviderConfig[pk];
+                var isHighlighted = pk === providerKey;
+                html += '<tr style="' + (isHighlighted ? 'font-weight:600;' : '') + '">';
+                html += '<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + (cfg ? cfg.color : '#888') + ';margin-right:4px;"></span>' + (cfg ? cfg.label : pk) + '</td>';
+                html += '<td style="text-align:right;font-weight:600;">' + (prov.bsls || 0).toLocaleString() + '</td>';
+                html += '<td style="text-align:right;">' + (prov.blocks || 0) + '</td>';
+                html += '<td style="text-align:right;">' + (prov.coveragePct || 0) + '%</td>';
+                html += '</tr>';
+            });
+        } else {
+            // Fallback: just show clicked provider
+            var cfg = bdcProviderConfig[providerKey];
+            html += '<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + (cfg ? cfg.color : '#888') + ';margin-right:4px;"></span>' + (cfg ? cfg.label : providerKey) + '</td>';
+            html += '<td style="text-align:right;font-weight:600;">' + (p.bsls || 0).toLocaleString() + '</td>';
+            html += '<td style="text-align:right;">' + (p.blocks || 0) + '</td>';
+            html += '<td style="text-align:right;">' + (p.coveragePct || 0) + '%</td></tr>';
+        }
+        html += '</table></div>';
+
+        // Overlap indicator
+        if (idx && Object.keys(idx.providers).length > 1) {
+            var count = Object.keys(idx.providers).length;
+            html += '<div style="margin-top:6px;padding:3px 8px;background:#FEF3C7;border-radius:4px;font-size:10px;color:#92400E;">';
+            html += '⚡ <strong>' + count + ' fiber providers</strong> competing in this block group</div>';
+        }
+
+        html += '</div>';
+        return html;
+    }
 
     function renderBDCLayer(providerKey, geojsonData, color) {
         if (!geojsonData || !geojsonData.features || !bdcLayers[providerKey]) return;
@@ -1195,15 +1350,7 @@
                     weight: 0.5,
                     interactive: true
                 });
-                poly.bindPopup(
-                    '<div style="font-family:Inter,sans-serif;font-size:12px;">' +
-                    '<strong>' + (f.properties.provider || providerKey) + '</strong><br>' +
-                    'Block Group: ' + (f.properties.id || 'N/A') + '<br>' +
-                    'BSLs: ' + (f.properties.bsls || 0).toLocaleString() + '<br>' +
-                    'State: ' + (f.properties.state || '') + '<br>' +
-                    'County: ' + (f.properties.county || '') +
-                    '</div>'
-                );
+                poly.bindPopup(buildBDCPopupHTML(providerKey, f), { maxWidth: 320 });
                 bdcLayers[providerKey].addLayer(poly);
             } catch(e) { /* skip malformed */ }
         });
@@ -1216,6 +1363,9 @@
         bdcProviderConfig.hunter.data = (typeof HUNTER_BDC_COVERAGE !== 'undefined') ? HUNTER_BDC_COVERAGE : null;
         bdcProviderConfig.astound.data = (typeof ASTOUND_BDC_COVERAGE !== 'undefined') ? ASTOUND_BDC_COVERAGE : null;
         bdcProviderConfig.tds.data = (typeof TDS_BDC_COVERAGE !== 'undefined') ? TDS_BDC_COVERAGE : null;
+
+        // Build cross-provider index
+        buildBDCIndex();
 
         Object.keys(bdcProviderConfig).forEach(function(key) {
             var cfg = bdcProviderConfig[key];
@@ -1622,6 +1772,200 @@
         }).join('');
 
         drilldown.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ================================================================
+    // OREGON TOWNS TAB
+    // ================================================================
+    var orTownsCurrentFilter = 'all';
+
+    function filterORTowns(metro) {
+        orTownsCurrentFilter = metro;
+        document.querySelectorAll('.or-metro-btn').forEach(function(b) {
+            b.className = 'or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border';
+        });
+        event.target.className = 'or-metro-btn px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-300';
+        renderORTownsTab();
+    }
+
+    function renderORTownsTab() {
+        if (typeof OREGON_TOWNS === 'undefined' || !bdcBlockGroupIndex || Object.keys(bdcBlockGroupIndex).length === 0) {
+            var t = document.getElementById('orTownsTable');
+            if (t) t.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-slate-400 text-sm">BDC data not loaded yet. Wait for coverage files to load.</td></tr>';
+            return;
+        }
+
+        // Build county-level BDC aggregation for Oregon
+        var countyBGs = {}; // countyFips -> [{ geoid, providers, bsls, hu100, pop100, areaLandSqKm }]
+        Object.keys(bdcBlockGroupIndex).forEach(function(geoid) {
+            var bg = bdcBlockGroupIndex[geoid];
+            if (bg.state !== 'OR') return;
+            var countyFips = '41' + geoid.substring(2, 5); // state(2) + county(3)
+            if (!countyBGs[countyFips]) countyBGs[countyFips] = [];
+            countyBGs[countyFips].push({
+                geoid: geoid,
+                providers: bg.providers,
+                hu100: bg.hu100 || 0,
+                pop100: bg.pop100 || 0,
+                areaLandSqKm: bg.areaLandSqKm || 0
+            });
+        });
+
+        // For each town, aggregate its county's BDC data
+        var towns = OREGON_TOWNS.map(function(town) {
+            var bgs = countyBGs[town.countyFips] || [];
+            var totalFiberBSLs = 0;
+            var totalHU = 0;
+            var totalArea = 0;
+            var providerBSLs = {};
+            var overlapBGs = 0;
+
+            // Track busiest block groups for sub-rows
+            var bgDetails = [];
+
+            bgs.forEach(function(bg) {
+                totalHU += bg.hu100;
+                totalArea += bg.areaLandSqKm;
+                var bgProvCount = Object.keys(bg.providers).length;
+                if (bgProvCount > 1) overlapBGs++;
+
+                var bgTotalBSLs = 0;
+                Object.keys(bg.providers).forEach(function(pk) {
+                    var bsls = bg.providers[pk].bsls || 0;
+                    if (!providerBSLs[pk]) providerBSLs[pk] = 0;
+                    providerBSLs[pk] += bsls;
+                    totalFiberBSLs += bsls;
+                    bgTotalBSLs += bsls;
+                });
+
+                bgDetails.push({
+                    geoid: bg.geoid,
+                    hu100: bg.hu100,
+                    pop100: bg.pop100,
+                    area: bg.areaLandSqKm,
+                    providers: bg.providers,
+                    totalBSLs: bgTotalBSLs,
+                    providerCount: bgProvCount
+                });
+            });
+
+            // Sort sub-rows by total BSLs descending
+            bgDetails.sort(function(a, b) { return b.totalBSLs - a.totalBSLs; });
+
+            var huPerSqKm = totalArea > 0 ? Math.round(totalHU / totalArea) : 0;
+            var densityClass = huPerSqKm > 400 ? 'Urban' : huPerSqKm > 100 ? 'Suburban' : 'Rural';
+
+            return {
+                name: town.name,
+                county: town.county,
+                metro: town.metro,
+                estHH: town.estHH,
+                bgCount: bgs.length,
+                totalFiberBSLs: totalFiberBSLs,
+                totalHU: totalHU,
+                providerBSLs: providerBSLs,
+                providerCount: Object.keys(providerBSLs).length,
+                overlapBGs: overlapBGs,
+                densityClass: densityClass,
+                huPerSqKm: huPerSqKm,
+                bgDetails: bgDetails.slice(0, 15), // Top 15 busiest BGs
+                notes: town.notes
+            };
+        });
+
+        // Apply metro filter
+        if (orTownsCurrentFilter !== 'all') {
+            towns = towns.filter(function(t) { return t.metro === orTownsCurrentFilter; });
+        }
+
+        // Sort by total fiber BSLs descending
+        towns.sort(function(a, b) { return b.totalFiberBSLs - a.totalFiberBSLs; });
+
+        // Update summary stats
+        var totalHUAll = 0, totalBGsAll = 0, allProviders = {};
+        towns.forEach(function(t) {
+            totalHUAll += t.estHH;
+            totalBGsAll += t.bgCount;
+            Object.keys(t.providerBSLs).forEach(function(pk) { allProviders[pk] = true; });
+        });
+
+        var el;
+        el = document.getElementById('orTownCount'); if (el) el.textContent = towns.length;
+        el = document.getElementById('orTotalHU'); if (el) el.textContent = totalHUAll.toLocaleString();
+        el = document.getElementById('orProviderCount'); if (el) el.textContent = Object.keys(allProviders).length;
+        el = document.getElementById('orTotalBGs'); if (el) el.textContent = totalBGsAll.toLocaleString();
+
+        // Render table
+        var tbody = document.getElementById('orTownsTable');
+        if (!tbody) return;
+
+        var densityColors = { Urban: '#059669', Suburban: '#D97706', Rural: '#DC2626' };
+        var densityBgs = { Urban: '#ECFDF5', Suburban: '#FFFBEB', Rural: '#FEF2F2' };
+
+        tbody.innerHTML = towns.map(function(t, idx) {
+            // Provider pills
+            var provPills = Object.keys(t.providerBSLs).sort(function(a, b) {
+                return t.providerBSLs[b] - t.providerBSLs[a];
+            }).map(function(pk) {
+                var cfg = bdcProviderConfig[pk];
+                var bsls = t.providerBSLs[pk];
+                return '<span style="display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:500;background:' + (cfg ? cfg.color : '#888') + '20;color:' + (cfg ? cfg.color : '#888') + ';border:1px solid ' + (cfg ? cfg.color : '#888') + '40;">' +
+                    '<span style="width:6px;height:6px;border-radius:50%;background:' + (cfg ? cfg.color : '#888') + ';"></span>' +
+                    (cfg ? cfg.label.split('/')[0].split(' ')[0] : pk) + ' <strong>' + bsls.toLocaleString() + '</strong></span>';
+            }).join(' ');
+
+            // Overlap indicator
+            var overlapBadge = t.overlapBGs > 0
+                ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ' +
+                  (t.overlapBGs > 20 ? 'bg-red-100 text-red-700' : t.overlapBGs > 5 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500') + '">' +
+                  t.overlapBGs + ' BGs</span>'
+                : '<span class="text-slate-300 text-[10px]">None</span>';
+
+            // Sub-rows HTML for expandable section
+            var subRowsHTML = t.bgDetails.map(function(bg) {
+                var bgProvs = Object.keys(bg.providers).map(function(pk) {
+                    var cfg = bdcProviderConfig[pk];
+                    return '<span style="color:' + (cfg ? cfg.color : '#888') + ';font-weight:600;">' +
+                        (cfg ? cfg.label.split('/')[0].split(' ')[0] : pk) + ': ' + (bg.providers[pk].bsls || 0).toLocaleString() + '</span>';
+                }).join(', ');
+                var bgDensity = bg.area > 0 ? Math.round(bg.hu100 / bg.area) : 0;
+                var bgDensClass = bgDensity > 400 ? 'Urban' : bgDensity > 100 ? 'Suburban' : 'Rural';
+                return '<tr class="or-subrow-' + idx + ' hidden border-b border-slate-50 bg-slate-50/50 text-[11px]">' +
+                    '<td class="py-1.5 px-3 text-slate-300">↳</td>' +
+                    '<td class="py-1.5 px-3 font-mono text-slate-500" colspan="2">' + bg.geoid + '</td>' +
+                    '<td class="py-1.5 px-3 text-slate-500">' + bg.hu100.toLocaleString() + ' HU</td>' +
+                    '<td class="py-1.5 px-3 text-right text-slate-500">' + bg.pop100.toLocaleString() + '</td>' +
+                    '<td class="py-1.5 px-3 text-right"></td>' +
+                    '<td class="py-1.5 px-3 text-center"><span style="color:' + (densityColors[bgDensClass] || '#888') + ';font-size:10px;">' + bgDensClass + '</span></td>' +
+                    '<td class="py-1.5 px-3" colspan="2">' + bgProvs + '</td>' +
+                    '<td class="py-1.5 px-3 text-center">' + (bg.providerCount > 1 ? '<span class="text-amber-600 font-semibold">' + bg.providerCount + '</span>' : '') + '</td>' +
+                    '</tr>';
+            }).join('');
+
+            return '<tr class="border-b border-slate-100 hover:bg-slate-50/50 cursor-pointer" onclick="toggleORSubRows(' + idx + ')">' +
+                '<td class="py-2.5 px-3 text-slate-400 text-center or-expand-' + idx + '">▶</td>' +
+                '<td class="py-2.5 px-3 font-semibold text-slate-800">' + t.name + '</td>' +
+                '<td class="py-2.5 px-3 text-slate-500">' + t.county + '</td>' +
+                '<td class="py-2.5 px-3 text-slate-500 text-[11px]">' + t.metro + '</td>' +
+                '<td class="py-2.5 px-3 text-right">' + (t.estHH || 0).toLocaleString() + '</td>' +
+                '<td class="py-2.5 px-3 text-right font-semibold">' + t.bgCount + '</td>' +
+                '<td class="py-2.5 px-3 text-center"><span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:' + (densityBgs[t.densityClass] || '#F1F5F9') + ';color:' + (densityColors[t.densityClass] || '#64748B') + ';">' + t.densityClass + '</span></td>' +
+                '<td class="py-2.5 px-3">' + provPills + '</td>' +
+                '<td class="py-2.5 px-3 text-right font-bold">' + t.totalFiberBSLs.toLocaleString() + '</td>' +
+                '<td class="py-2.5 px-3 text-center">' + overlapBadge + '</td>' +
+                '</tr>' + subRowsHTML;
+        }).join('');
+    }
+
+    function toggleORSubRows(idx) {
+        var rows = document.querySelectorAll('.or-subrow-' + idx);
+        var expand = document.querySelector('.or-expand-' + idx);
+        var isHidden = rows.length > 0 && rows[0].classList.contains('hidden');
+        rows.forEach(function(r) {
+            if (isHidden) r.classList.remove('hidden');
+            else r.classList.add('hidden');
+        });
+        if (expand) expand.textContent = isHidden ? '▼' : '▶';
     }
 
     // ================================================================
