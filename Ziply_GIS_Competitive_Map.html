@@ -540,23 +540,23 @@
                     <h2 class="font-bold text-lg">Consolidation Candidates</h2>
                     <span class="px-2 py-0.5 bg-white/20 rounded text-[10px] font-medium">STRATEGIC ANALYSIS</span>
                 </div>
-                <p class="text-amber-200 text-xs mb-4">Providers with &lt;50K fiber BSLs in WA, OR, ID, MT — potential acquisition or tuck-in targets for Ziply footprint expansion.</p>
+                <p class="text-amber-200 text-xs mb-4">Providers with &lt;50K BSLs in WA, OR, ID, MT — potential acquisition or tuck-in targets. Fiber data from FCC BDC J25 filing (as-of Jun 2025).</p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="consolidationSummary">
                     <div class="bg-white/10 rounded-lg p-3">
                         <p class="text-amber-200 text-[10px] mb-1">Total Candidates</p>
                         <p class="font-bold text-2xl" id="consolCandidateCount">--</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
-                        <p class="text-amber-200 text-[10px] mb-1">Aggregate Fiber BSLs</p>
-                        <p class="font-bold text-2xl" id="consolAggregateBSLs">--</p>
+                        <p class="text-amber-200 text-[10px] mb-1">Total BSLs (all tech)</p>
+                        <p class="font-bold text-2xl" id="consolTotalBSLs">--</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
-                        <p class="text-amber-200 text-[10px] mb-1">Est. Addressable Market</p>
-                        <p class="font-bold text-2xl" id="consolAddressable">--</p>
+                        <p class="text-amber-200 text-[10px] mb-1">Fiber BSLs (FTTP only)</p>
+                        <p class="font-bold text-2xl" id="consolFiberBSLs">--</p>
                     </div>
                     <div class="bg-white/10 rounded-lg p-3">
-                        <p class="text-amber-200 text-[10px] mb-1">States Covered</p>
-                        <p class="font-bold text-2xl">4</p>
+                        <p class="text-amber-200 text-[10px] mb-1">Avg Fiber %</p>
+                        <p class="font-bold text-2xl" id="consolAvgFiber">--</p>
                         <p class="text-amber-300 text-[10px]">WA, OR, ID, MT</p>
                     </div>
                 </div>
@@ -581,15 +581,14 @@
                     <table class="w-full text-xs min-w-[1100px]">
                         <thead>
                             <tr class="border-b text-left text-slate-500">
-                                <th class="pb-2 px-3">Flag</th>
                                 <th class="pb-2 px-3">Provider</th>
                                 <th class="pb-2 px-3">States</th>
                                 <th class="pb-2 px-3 text-right">Total BSLs</th>
                                 <th class="pb-2 px-3 text-right">Fiber BSLs</th>
+                                <th class="pb-2 px-3 text-right">Fiber %</th>
                                 <th class="pb-2 px-3">Key Markets</th>
                                 <th class="pb-2 px-3">Tech Mix</th>
                                 <th class="pb-2 px-3">Ownership</th>
-                                <th class="pb-2 px-3 text-right">Est. Passings</th>
                                 <th class="pb-2 px-3">Strategic Notes</th>
                             </tr>
                         </thead>
@@ -2021,9 +2020,8 @@
     // ================================================================
     function renderConsolidationTab() {
         if (typeof CONSOLIDATION_CANDIDATES === 'undefined') {
-            // If no external data, use a fallback empty state
             var table = document.getElementById('consolidationTable');
-            if (table) table.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-slate-400 text-sm">No consolidation data loaded. Ensure data.js includes CONSOLIDATION_CANDIDATES.</td></tr>';
+            if (table) table.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-slate-400 text-sm">No consolidation data loaded. Ensure data.js includes CONSOLIDATION_CANDIDATES.</td></tr>';
             return;
         }
 
@@ -2038,49 +2036,45 @@
 
         // Compute summary metrics
         var totalCandidates = candidates.length;
+        var aggregateTotalBSLs = 0;
         var aggregateFiberBSLs = 0;
-        var aggregatePassings = 0;
         candidates.forEach(function(c) {
+            aggregateTotalBSLs += c.totalBSLs || 0;
             aggregateFiberBSLs += c.fiberBSLs || 0;
-            aggregatePassings += c.estPassings || 0;
         });
+        var avgFiberPct = aggregateTotalBSLs > 0 ? ((aggregateFiberBSLs / aggregateTotalBSLs) * 100).toFixed(1) : 0;
 
         var countEl = document.getElementById('consolCandidateCount');
-        var bslEl = document.getElementById('consolAggregateBSLs');
-        var addrEl = document.getElementById('consolAddressable');
+        var totalEl = document.getElementById('consolTotalBSLs');
+        var fiberEl = document.getElementById('consolFiberBSLs');
+        var avgEl = document.getElementById('consolAvgFiber');
         if (countEl) countEl.textContent = totalCandidates;
-        if (bslEl) bslEl.textContent = aggregateFiberBSLs.toLocaleString();
-        if (addrEl) addrEl.textContent = aggregatePassings.toLocaleString();
+        if (totalEl) totalEl.textContent = aggregateTotalBSLs.toLocaleString();
+        if (fiberEl) fiberEl.textContent = aggregateFiberBSLs.toLocaleString();
+        if (avgEl) avgEl.textContent = avgFiberPct + '%';
 
         // Render table
         var tbody = document.getElementById('consolidationTable');
         if (!tbody) return;
 
         tbody.innerHTML = candidates.map(function(c) {
-            var fiberPct = c.totalBSLs > 0 ? ((c.fiberBSLs / c.totalBSLs) * 100).toFixed(0) : 0;
-            // Flag: attractiveness based on fiber %, geographic overlap, scale
-            var flagClass, flagLabel;
-            if (c.fiberBSLs > 20000) {
-                flagClass = 'flag-high'; flagLabel = 'HIGH';
-            } else if (c.fiberBSLs > 5000) {
-                flagClass = 'flag-medium'; flagLabel = 'MEDIUM';
-            } else {
-                flagClass = 'flag-low'; flagLabel = 'LOW';
-            }
+            var fiberPct = c.totalBSLs > 0 ? ((c.fiberBSLs / c.totalBSLs) * 100).toFixed(1) : 0;
+            var fiberPctNum = parseFloat(fiberPct);
 
-            // Row highlight
-            var rowBg = c.fiberBSLs > 20000 ? 'background:#FEF2F2;' : c.fiberBSLs > 5000 ? 'background:#FFFBEB;' : '';
+            // Color-code fiber % for visual differentiation
+            var pctColor, pctBg;
+            if (fiberPctNum >= 80) { pctColor = 'text-green-700'; pctBg = 'bg-green-50'; }
+            else if (fiberPctNum >= 40) { pctColor = 'text-blue-700'; pctBg = 'bg-blue-50'; }
+            else if (fiberPctNum > 0) { pctColor = 'text-amber-700'; pctBg = 'bg-amber-50'; }
+            else { pctColor = 'text-slate-400'; pctBg = 'bg-slate-50'; }
 
-            return '<tr class="border-b border-slate-100 hover:bg-slate-50/50" style="' + rowBg + '">' +
-                '<td class="py-2.5 px-3"><span class="consolidation-flag ' + flagClass + '">' +
-                '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 2v20h2V14h6l1 2h7V4h-7l-1 2H6V2z"/></svg>' +
-                flagLabel + '</span></td>' +
-                '<td class="py-2.5 px-3 font-semibold text-slate-800">' + c.provider + '</td>' +
+            return '<tr class="border-b border-slate-100 hover:bg-slate-50/50">' +
+                '<td class="py-2.5 px-3 font-semibold text-slate-800">' + c.provider +
+                (c.providerId && c.providerId !== 'TBD' ? '<br><span class="text-[9px] text-slate-400 font-normal">FCC ID: ' + c.providerId + '</span>' : '') + '</td>' +
                 '<td class="py-2.5 px-3 text-slate-500">' + (c.states ? c.states.join(', ') : '') + '</td>' +
                 '<td class="py-2.5 px-3 text-right font-semibold">' + (c.totalBSLs || 0).toLocaleString() + '</td>' +
-                '<td class="py-2.5 px-3 text-right">' +
-                '<span class="font-semibold">' + (c.fiberBSLs || 0).toLocaleString() + '</span>' +
-                '<span class="text-[10px] text-slate-400 ml-1">(' + fiberPct + '%)</span></td>' +
+                '<td class="py-2.5 px-3 text-right font-semibold">' + (c.fiberBSLs || 0).toLocaleString() + '</td>' +
+                '<td class="py-2.5 px-3 text-right"><span class="px-1.5 py-0.5 rounded text-[11px] font-bold ' + pctColor + ' ' + pctBg + '">' + fiberPct + '%</span></td>' +
                 '<td class="py-2.5 px-3 text-slate-600">' + (c.keyMarkets || '') + '</td>' +
                 '<td class="py-2.5 px-3">' + (c.techMix || '').split(',').map(function(t) {
                     t = t.trim();
@@ -2091,7 +2085,6 @@
                     return '<span class="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] font-medium mr-0.5">' + t + '</span>';
                 }).join('') + '</td>' +
                 '<td class="py-2.5 px-3 text-slate-500 text-[11px]">' + (c.ownership || '') + '</td>' +
-                '<td class="py-2.5 px-3 text-right font-semibold">' + (c.estPassings || 0).toLocaleString() + '</td>' +
                 '<td class="py-2.5 px-3 text-slate-500 text-[11px]">' + (c.strategicNotes || '') + '</td>' +
                 '</tr>';
         }).join('');
