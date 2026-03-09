@@ -870,13 +870,20 @@
             '</tr>';
     }
 
-    function metricWithSource(label, value, source, sourceUrl, note) {
+    function metricWithSource(label, value, source, sourceUrl, note, archiveUrl) {
+        var sourceLink = '';
+        if (sourceUrl) {
+            sourceLink = '<br><a href="' + sourceUrl + '" target="_blank" class="text-[9px] text-blue-500 underline">' + (source || 'Source') + '</a>';
+            if (archiveUrl) {
+                sourceLink += ' <a href="' + archiveUrl + '" target="_blank" class="text-[9px] text-amber-600 underline ml-1" title="Archived evidence screenshot">[📸 evidence]</a>';
+            }
+        }
         return '<div class="flex justify-between items-start py-1.5 border-b border-slate-50">' +
             '<div><span class="text-xs text-slate-500">' + label + '</span>' +
             (note ? '<p class="text-[9px] text-slate-400 mt-0.5">' + note + '</p>' : '') +
             '</div><div class="text-right">' +
             '<span class="text-xs font-semibold text-slate-800">' + value + '</span>' +
-            (sourceUrl ? '<br><a href="' + sourceUrl + '" target="_blank" class="text-[9px] text-blue-500 underline">' + (source || 'Source') + '</a>' : '') +
+            sourceLink +
             '</div></div>';
     }
 
@@ -1443,17 +1450,27 @@
         if (typeof OPERATOR_PROFILES === 'undefined') return;
         var container = document.getElementById('profileCards');
         if (!container) return;
-        container.innerHTML = OPERATOR_PROFILES.map(function(op) {
+        container.innerHTML = OPERATOR_PROFILES.filter(function(op) { return !op.hiddenFromProfiles; }).map(function(op) {
             var prov = (typeof PROVIDERS !== 'undefined') ? PROVIDERS[op.id] : null;
             var color = prov ? prov.color : (PROVIDER_COLORS[op.id] || '#6B7280');
+            // Build subtitle from PROVIDERS sponsor or Ownership metric
+            var sponsor = prov ? prov.sponsor : '';
+            if (!sponsor) {
+                var ownershipMetric = op.metrics.find(function(m) { return m.label === 'Ownership'; });
+                sponsor = ownershipMetric ? ownershipMetric.value : '';
+            }
+            // Pull states/markets from metrics for subtitle line 2
+            var statesMetric = op.metrics.find(function(m) { return m.label === 'States Served'; });
+            var marketsMetric = op.metrics.find(function(m) { return m.label === 'Key Markets' || m.label === 'PNW Markets' || m.label === 'Service Area'; });
+            var subtitle2 = statesMetric ? statesMetric.value : (marketsMetric ? marketsMetric.value : '');
             return '<div class="bg-white rounded-xl shadow-sm overflow-hidden">' +
                 '<div class="p-4 text-white" style="background:' + color + '">' +
                 '<h3 class="font-bold text-lg">' + op.name + '</h3>' +
-                '<p class="text-sm opacity-80">' + (op.sponsor || '') + ' | ' + (op.hq || '') + '</p>' +
-                '<p class="text-xs opacity-60 mt-1">' + (op.states ? op.states.join(', ') : '') + '</p></div>' +
+                (sponsor ? '<p class="text-sm opacity-80">' + sponsor + '</p>' : '') +
+                (subtitle2 ? '<p class="text-xs opacity-60 mt-1">' + subtitle2 + '</p>' : '') + '</div>' +
                 '<div class="p-4 space-y-1">' +
                 op.metrics.map(function(m) {
-                    return metricWithSource(m.label, m.value + (m.asOf ? ' <span class="text-[10px] text-slate-400">(' + m.asOf + ')</span>' : ''), m.source, m.sourceUrl, m.note);
+                    return metricWithSource(m.label, m.value + (m.asOf ? ' <span class="text-[10px] text-slate-400">(' + m.asOf + ')</span>' : ''), m.source, m.sourceUrl, m.note, m.archiveUrl);
                 }).join('') +
                 '</div></div>';
         }).join('');

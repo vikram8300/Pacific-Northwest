@@ -10,7 +10,7 @@ const PASSWORD_HASH = "829f36c0d7e51ec12a4a68e4b0cecdd868ae44965c69fe9b92dde54df
 // ---- PROVIDER DEFINITIONS ----
 const PROVIDERS = {
     ziply:      { name: "Ziply Fiber",              sponsor: "WaveDivision/BCE (acq. Aug 2025)", color: "#16A34A", short: "ZIP" },
-    hunter:     { name: "Hunter Communications",    sponsor: "SDCF Capital",                     color: "#DC2626", short: "HNT" },
+    hunter:     { name: "Hunter Communications",    sponsor: "Oak Hill Capital (acq. Dec 2025)",   color: "#DC2626", short: "HNT" },
     quantum:    { name: "Quantum Fiber (now AT&T)",  sponsor: "AT&T (acq. Feb 2026)",            color: "#0EA5E9", short: "QF"  },
     ezee:       { name: "Ezee Fiber",               sponsor: "Private (TX-based)",               color: "#EC4899", short: "EZE" },
     lightcurve: { name: "Lightcurve",               sponsor: "Palisade Infrastructure",          color: "#14B8A6", short: "LC"  },
@@ -31,12 +31,12 @@ const OPERATOR_PROFILES = [
         shortName: "Ziply",
         color: "#16A34A",
         metrics: [
-            { label: "Total Customers", value: "~1.3M", source: "BroadbandNow / BCE filings", sourceUrl: "https://broadbandnow.com/Ziply-Fiber" },
-            { label: "States Served", value: "WA, OR, ID, MT", source: "Ziply Fiber", sourceUrl: "https://ziplyfiber.com/" },
-            { label: "Technology", value: "FTTP (XGS-PON)", source: "Ziply Fiber", sourceUrl: "https://ziplyfiber.com/fiber-internet" },
-            { label: "Key Markets", value: "Seattle, Portland, Boise, Spokane, Everett", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
-            { label: "Ownership", value: "BCE Inc. (acquired Aug 2025)", source: "Light Reading", sourceUrl: "https://www.lightreading.com/fiber/bce-closes-5-billion-deal-for-ziply-fiber" },
-            { label: "Speed Tiers", value: "Up to 50 Gbps (business)", source: "Ziply Fiber", sourceUrl: "https://ziplyfiber.com/fiber-internet" }
+            { label: "Total Customers", value: "~1.3M", source: "BroadbandNow — Ziply Fiber profile page", sourceUrl: "https://broadbandnow.com/Ziply-Fiber", archiveUrl: "https://web.archive.org/web/2026/https://broadbandnow.com/Ziply-Fiber" },
+            { label: "States Served", value: "WA, OR, ID, MT", source: "Ziply Fiber — service area page", sourceUrl: "https://ziplyfiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://ziplyfiber.com/" },
+            { label: "Technology", value: "FTTP (XGS-PON)", source: "Ziply Fiber — internet plans page", sourceUrl: "https://ziplyfiber.com/fiber-internet", archiveUrl: "https://web.archive.org/web/2026/https://ziplyfiber.com/fiber-internet" },
+            { label: "Key Markets", value: "Seattle, Portland, Boise, Spokane, Everett", source: "FCC BDC — broadband availability map", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
+            { label: "Ownership", value: "BCE Inc. (acquired Aug 2025)", source: "Light Reading (Aug 2025) — 'BCE closes $5B deal for Ziply Fiber'", sourceUrl: "https://www.lightreading.com/fiber/bce-closes-5-billion-deal-for-ziply-fiber", archiveUrl: "https://web.archive.org/web/2025/https://www.lightreading.com/fiber/bce-closes-5-billion-deal-for-ziply-fiber" },
+            { label: "Speed Tiers", value: "Up to 50 Gbps (business)", source: "Ziply Fiber — internet plans page", sourceUrl: "https://ziplyfiber.com/fiber-internet", archiveUrl: "https://web.archive.org/web/2026/https://ziplyfiber.com/fiber-internet" }
         ]
     },
     {
@@ -45,14 +45,14 @@ const OPERATOR_PROFILES = [
         shortName: "Hunter",
         color: "#DC2626",
         metrics: [
-            { label: "Total Passings", value: "~100K residential + commercial", source: "Hunter Fiber", sourceUrl: "https://hunterfiber.com/" },
-            { label: "Subscribers", value: "~25,000+", source: "BroadbandNow", sourceUrl: "https://broadbandnow.com/Hunter-Communications" },
-            { label: "Route Miles", value: "~3,000 route miles", source: "Hunter Communications", sourceUrl: "https://hunterfiber.com/about/" },
-            { label: "States Served", value: "OR (Southern + Willamette Valley)", source: "Hunter Communications", sourceUrl: "https://hunterfiber.com/" },
-            { label: "Technology", value: "FTTP", source: "Hunter Communications", sourceUrl: "https://hunterfiber.com/" },
-            { label: "Key Markets", value: "Medford (HQ), Eugene, Salem, Grants Pass, Klamath Falls", source: "PRNewswire", sourceUrl: "https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html" },
-            { label: "Ownership", value: "Oak Hill Capital (acquired Dec 2025)", source: "Oak Hill Capital", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
-            { label: "Oak Hill Deal", value: "22nd broadband investment; 8 FTTP platforms, 35 states, ~5M passings", source: "Oak Hill Capital", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" }
+            { label: "Total Passings", value: "~100K residential + commercial", source: "Oak Hill Capital PR (Dec 2025) — ¶2: 'passing approximately 100,000 locations'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
+            { label: "Subscribers", value: "~25,000+", source: "Oak Hill Capital PR — ¶2: 'more than 25,000 customers'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
+            { label: "Route Miles", value: "~3,000 route miles", source: "Oak Hill Capital PR — ¶2: 'more than 3,000 route miles'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
+            { label: "States Served", value: "OR (Southern + Willamette Valley)", source: "Oak Hill Capital PR — ¶1: 'Oregon and Northern California'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
+            { label: "Technology", value: "FTTP", source: "Oak Hill Capital PR — ¶1: 'fiber-to-the-premises (\"FTTP\")'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
+            { label: "Key Markets", value: "Medford (HQ), Eugene, Salem, Grants Pass, Klamath Falls", source: "PRNewswire (Mar 2025) — Salem expansion announcement", sourceUrl: "https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html", archiveUrl: "https://web.archive.org/web/2025/https://www.prnewswire.com/news-releases/oregon-based-internet-provider-announces-expansion-into-salem-metro-region-302460727.html" },
+            { label: "Ownership", value: "Oak Hill Capital (acquired Dec 2025)", source: "Oak Hill Capital PR — ¶1: 'definitive agreement to acquire'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" },
+            { label: "Oak Hill Deal", value: "22nd broadband investment; 8 FTTP platforms, 35 states, ~5M passings", source: "Oak Hill Capital PR — ¶6: 'eight FTTP platforms…five million locations'", sourceUrl: "https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/", archiveUrl: "https://web.archive.org/web/2026/https://oakhill.com/2025/12/10/oak-hill-capital-to-acquire-hunter-communications/" }
         ]
     },
     {
@@ -61,12 +61,12 @@ const OPERATOR_PROFILES = [
         shortName: "Quantum",
         color: "#0EA5E9",
         metrics: [
-            { label: "PNW Passings", value: "~500K+ (WA/OR legacy CenturyLink)", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
-            { label: "Acquisition", value: "AT&T closed $5.75B deal Feb 2, 2026", source: "AT&T Newsroom", sourceUrl: "https://about.att.com/story/2026/att-lumen-deal-close.html" },
-            { label: "Technology", value: "FTTP (XGS-PON, up to 8 Gbps)", source: "Quantum Fiber", sourceUrl: "https://www.quantumfiber.com/" },
-            { label: "Key Markets", value: "Portland, Seattle, Boise metro areas", source: "BroadbandNow", sourceUrl: "https://broadbandnow.com/Oregon/Portland" },
-            { label: "Deal Value", value: "$5.75B for Lumen consumer fiber (1M+ subs, 4M+ locations)", source: "Denver Post", sourceUrl: "https://www.denverpost.com/2025/05/21/att-lumen-fiber-purchase-quantum-centurylink/" },
-            { label: "Idaho Plans", value: "Nearly doubling Idaho fiber build rate in 2026", source: "BoiseDev", sourceUrl: "https://boisedev.com/news/2026/02/03/major-company-acquires-fiber-internet-networks-in-boise/" }
+            { label: "PNW Passings", value: "~500K+ (WA/OR legacy CenturyLink)", source: "FCC BDC — broadband availability map", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
+            { label: "Acquisition", value: "AT&T closed $5.75B deal Feb 2, 2026", source: "AT&T Newsroom (Feb 2026) — official close announcement", sourceUrl: "https://about.att.com/story/2026/att-lumen-deal-close.html", archiveUrl: "https://web.archive.org/web/2026/https://about.att.com/story/2026/att-lumen-deal-close.html" },
+            { label: "Technology", value: "FTTP (XGS-PON, up to 8 Gbps)", source: "Quantum Fiber — service page", sourceUrl: "https://www.quantumfiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.quantumfiber.com/" },
+            { label: "Key Markets", value: "Portland, Seattle, Boise metro areas", source: "BroadbandNow — Portland fiber providers", sourceUrl: "https://broadbandnow.com/Oregon/Portland", archiveUrl: "https://web.archive.org/web/2026/https://broadbandnow.com/Oregon/Portland" },
+            { label: "Deal Value", value: "$5.75B for Lumen consumer fiber (1M+ subs, 4M+ locations)", source: "Denver Post (May 2025) — 'AT&T to purchase Lumen fiber'", sourceUrl: "https://www.denverpost.com/2025/05/21/att-lumen-fiber-purchase-quantum-centurylink/", archiveUrl: "https://web.archive.org/web/2025/https://www.denverpost.com/2025/05/21/att-lumen-fiber-purchase-quantum-centurylink/" },
+            { label: "Idaho Plans", value: "Nearly doubling Idaho fiber build rate in 2026", source: "BoiseDev (Feb 2026) — 'Major company acquires fiber internet networks in Boise'", sourceUrl: "https://boisedev.com/news/2026/02/03/major-company-acquires-fiber-internet-networks-in-boise/", archiveUrl: "https://web.archive.org/web/2026/https://boisedev.com/news/2026/02/03/major-company-acquires-fiber-internet-networks-in-boise/" }
         ]
     },
     {
@@ -75,12 +75,12 @@ const OPERATOR_PROFILES = [
         shortName: "Ezee",
         color: "#EC4899",
         metrics: [
-            { label: "WA Investment", value: "$400M announced", source: "PRNewswire", sourceUrl: "https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html" },
-            { label: "First WA Customer", value: "Oct 22, 2025 (Kent)", source: "PRNewswire", sourceUrl: "https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html" },
-            { label: "Technology", value: "FTTP (up to 8 Gbps residential)", source: "Ezee Fiber", sourceUrl: "https://ezeefiber.com/" },
-            { label: "States Served", value: "TX (HQ), WA (new)", source: "Ezee Fiber", sourceUrl: "https://ezeefiber.com/" },
-            { label: "Key Markets", value: "Kent, Des Moines, Puyallup, Milton, Lakewood, Fife, Algona, Pacific, Vancouver WA", source: "Ezee Fiber", sourceUrl: "https://ezeefiber.com/" },
-            { label: "Ownership", value: "Private (TX-based)", source: "Ezee Fiber", sourceUrl: "https://ezeefiber.com/about/" }
+            { label: "WA Investment", value: "$400M announced", source: "PRNewswire (Oct 2025) — ¶1: 'investing more than $400 million'", sourceUrl: "https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html", archiveUrl: "https://web.archive.org/web/2025/https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html" },
+            { label: "First WA Customer", value: "Oct 22, 2025 (Kent)", source: "PRNewswire (Oct 2025) — headline: 'First Customer in Kent, WA'", sourceUrl: "https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html", archiveUrl: "https://web.archive.org/web/2025/https://www.prnewswire.com/news-releases/ezee-fiber-connects-first-customer-in-kent-wa-marking-launch-in-washington-state-302591803.html" },
+            { label: "Technology", value: "FTTP (up to 8 Gbps residential)", source: "Ezee Fiber — plans page", sourceUrl: "https://ezeefiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://ezeefiber.com/" },
+            { label: "States Served", value: "TX (HQ), WA (new)", source: "Ezee Fiber — service areas", sourceUrl: "https://ezeefiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://ezeefiber.com/" },
+            { label: "Key Markets", value: "Kent, Des Moines, Puyallup, Milton, Lakewood, Fife, Algona, Pacific, Vancouver WA", source: "Ezee Fiber — availability checker", sourceUrl: "https://ezeefiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://ezeefiber.com/" },
+            { label: "Ownership", value: "Private (TX-based)", source: "Ezee Fiber — about page", sourceUrl: "https://ezeefiber.com/about/", archiveUrl: "https://web.archive.org/web/2026/https://ezeefiber.com/about/" }
         ]
     },
     {
@@ -89,13 +89,13 @@ const OPERATOR_PROFILES = [
         shortName: "Lightcurve",
         color: "#14B8A6",
         metrics: [
-            { label: "Total Passings", value: "~160K", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/" },
-            { label: "HQ", value: "Tacoma, WA", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/" },
-            { label: "History", value: "Palisade acquired Rainier Connect, rebranded Lightcurve", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/palisade-infrastructure-acquires-rainier-connect-and-announces-name-change-to-lightcurve/" },
-            { label: "Technology", value: "FTTP + HFC upgrade", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/" },
-            { label: "Key Markets", value: "Tacoma, Eatonville, Centralia, Yelm, Ellensburg, Rochester, Lewis/Thurston/Kittitas Cos.", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/" },
-            { label: "Build Plan", value: "2,750 mi fiber planned, 163K premises across Pierce/Thurston/Lewis/Kittitas", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/" },
-            { label: "Ownership", value: "Palisade Infrastructure", source: "Lightcurve", sourceUrl: "https://getlightcurve.com/palisade-infrastructure-acquires-rainier-connect-and-announces-name-change-to-lightcurve/" }
+            { label: "Total Passings", value: "~160K", source: "Lightcurve — homepage hero stats", sourceUrl: "https://getlightcurve.com/", archiveUrl: "https://web.archive.org/web/2026/https://getlightcurve.com/" },
+            { label: "HQ", value: "Tacoma, WA", source: "Lightcurve — contact page", sourceUrl: "https://getlightcurve.com/", archiveUrl: "https://web.archive.org/web/2026/https://getlightcurve.com/" },
+            { label: "History", value: "Palisade acquired Rainier Connect, rebranded Lightcurve", source: "Lightcurve blog — 'Palisade acquires Rainier Connect' post", sourceUrl: "https://getlightcurve.com/palisade-infrastructure-acquires-rainier-connect-and-announces-name-change-to-lightcurve/", archiveUrl: "https://web.archive.org/web/2025/https://getlightcurve.com/palisade-infrastructure-acquires-rainier-connect-and-announces-name-change-to-lightcurve/" },
+            { label: "Technology", value: "FTTP + HFC upgrade", source: "Lightcurve — internet service page", sourceUrl: "https://getlightcurve.com/", archiveUrl: "https://web.archive.org/web/2026/https://getlightcurve.com/" },
+            { label: "Key Markets", value: "Tacoma, Eatonville, Centralia, Yelm, Ellensburg, Rochester, Lewis/Thurston/Kittitas Cos.", source: "Lightcurve — service area page", sourceUrl: "https://getlightcurve.com/", archiveUrl: "https://web.archive.org/web/2026/https://getlightcurve.com/" },
+            { label: "Build Plan", value: "2,750 mi fiber planned, 163K premises across Pierce/Thurston/Lewis/Kittitas", source: "Lightcurve — fiber expansion page", sourceUrl: "https://getlightcurve.com/", archiveUrl: "https://web.archive.org/web/2026/https://getlightcurve.com/" },
+            { label: "Ownership", value: "Palisade Infrastructure", source: "Lightcurve blog — acquisition announcement", sourceUrl: "https://getlightcurve.com/palisade-infrastructure-acquires-rainier-connect-and-announces-name-change-to-lightcurve/", archiveUrl: "https://web.archive.org/web/2025/https://getlightcurve.com/palisade-infrastructure-acquires-rainier-connect-and-announces-name-change-to-lightcurve/" }
         ]
     },
     {
@@ -104,11 +104,11 @@ const OPERATOR_PROFILES = [
         shortName: "Astound",
         color: "#F97316",
         metrics: [
-            { label: "Portland Metro Passings", value: "~51K", source: "BroadbandNow", sourceUrl: "https://broadbandnow.com/Astound-Broadband" },
-            { label: "Oregon Coast Build", value: "108-mi Hwy 6 fiber (completed Apr 2025)", source: "GeekWire", sourceUrl: "https://www.geekwire.com/2025/astound-powers-up-new-fiber-internet-near-oregon-coast-with-help-from-aws/" },
-            { label: "Technology", value: "HFC + FTTP", source: "Astound Broadband", sourceUrl: "https://www.astound.com/oregon/" },
-            { label: "Key Markets", value: "Hillsboro, N Seattle, Tillamook, Oregon Coast", source: "BroadbandNow", sourceUrl: "https://broadbandnow.com/Washington/Seattle" },
-            { label: "Ownership", value: "Stonepeak (fmr. Wave Broadband)", source: "Astound Broadband", sourceUrl: "https://www.astound.com/about/" }
+            { label: "Portland Metro Passings", value: "~51K", source: "BroadbandNow — Astound Broadband profile", sourceUrl: "https://broadbandnow.com/Astound-Broadband", archiveUrl: "https://web.archive.org/web/2026/https://broadbandnow.com/Astound-Broadband" },
+            { label: "Oregon Coast Build", value: "108-mi Hwy 6 fiber (completed Apr 2025)", source: "GeekWire (Apr 2025) — 'Astound powers up new fiber near Oregon Coast'", sourceUrl: "https://www.geekwire.com/2025/astound-powers-up-new-fiber-internet-near-oregon-coast-with-help-from-aws/", archiveUrl: "https://web.archive.org/web/2025/https://www.geekwire.com/2025/astound-powers-up-new-fiber-internet-near-oregon-coast-with-help-from-aws/" },
+            { label: "Technology", value: "HFC + FTTP", source: "Astound Broadband — Oregon service page", sourceUrl: "https://www.astound.com/oregon/", archiveUrl: "https://web.archive.org/web/2026/https://www.astound.com/oregon/" },
+            { label: "Key Markets", value: "Hillsboro, N Seattle, Tillamook, Oregon Coast", source: "BroadbandNow — Seattle fiber providers", sourceUrl: "https://broadbandnow.com/Washington/Seattle", archiveUrl: "https://web.archive.org/web/2026/https://broadbandnow.com/Washington/Seattle" },
+            { label: "Ownership", value: "Stonepeak (fmr. Wave Broadband)", source: "Astound Broadband — about page", sourceUrl: "https://www.astound.com/about/", archiveUrl: "https://web.archive.org/web/2026/https://www.astound.com/about/" }
         ]
     },
     {
@@ -117,14 +117,14 @@ const OPERATOR_PROFILES = [
         shortName: "Fat Beam",
         color: "#F59E0B",
         metrics: [
-            { label: "Focus", value: "Enterprise / Government fiber", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/" },
-            { label: "Spokane Valley Expansion", value: "24.5 mi fiber (EMAN acquisition)", source: "Fierce Network", sourceUrl: "https://www.fierce-network.com/telecom/fatbeam-acquires-eman-networks-spokane-valley-network-gains-24-5-miles-fiber" },
-            { label: "Technology", value: "FTTP (enterprise/lit services)", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/" },
-            { label: "Key Markets", value: "Spokane, Spokane Valley, Liberty Lake, CDA", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/locations/spokane-wa" },
-            { label: "Ownership", value: "Columbia Capital", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/about/" },
-            { label: "Residential FTTH", value: "Now offering residential fiber (250 Mbps–2 Gbps). No contracts.", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/media-news/fatbeam-fiber-expands-fiber-network-to-new-boise-areas-and-meridian" },
-            { label: "Boise Expansion", value: "Phase 1 Boise complete; expanding to Meridian + Twin Falls", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/media-news/fatbeam-fiber-expands-fiber-network-to-new-boise-areas-and-meridian" },
-            { label: "Network Scale", value: "150K+ fiber miles across 8 states", source: "Fat Beam", sourceUrl: "https://www.fatbeamfiber.com/" }
+            { label: "Focus", value: "Enterprise / Government fiber → now residential", source: "Fat Beam — homepage banner", sourceUrl: "https://www.fatbeamfiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/" },
+            { label: "Spokane Valley Expansion", value: "24.5 mi fiber (EMAN acquisition)", source: "Fierce Network — 'Fatbeam acquires EMAN Networks' article", sourceUrl: "https://www.fierce-network.com/telecom/fatbeam-acquires-eman-networks-spokane-valley-network-gains-24-5-miles-fiber", archiveUrl: "https://web.archive.org/web/2025/https://www.fierce-network.com/telecom/fatbeam-acquires-eman-networks-spokane-valley-network-gains-24-5-miles-fiber" },
+            { label: "Technology", value: "FTTP (enterprise + residential)", source: "Fat Beam — residential plans page", sourceUrl: "https://www.fatbeamfiber.com/residential", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/residential" },
+            { label: "Key Markets", value: "Spokane, Spokane Valley, Liberty Lake, CDA, Boise, Meridian", source: "Fat Beam — Spokane location page", sourceUrl: "https://www.fatbeamfiber.com/locations/spokane-wa", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/locations/spokane-wa" },
+            { label: "Ownership", value: "Columbia Capital", source: "Fat Beam — about page", sourceUrl: "https://www.fatbeamfiber.com/about/", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/about/" },
+            { label: "Residential FTTH", value: "Now offering residential fiber (250 Mbps–2 Gbps). No contracts.", source: "Fat Beam news — 'Expands fiber to new Boise areas and Meridian'", sourceUrl: "https://www.fatbeamfiber.com/media-news/fatbeam-fiber-expands-fiber-network-to-new-boise-areas-and-meridian", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/media-news/fatbeam-fiber-expands-fiber-network-to-new-boise-areas-and-meridian" },
+            { label: "Boise Expansion", value: "Phase 1 Boise complete; expanding to Meridian + Twin Falls", source: "Fat Beam news — Boise/Meridian expansion announcement", sourceUrl: "https://www.fatbeamfiber.com/media-news/fatbeam-fiber-expands-fiber-network-to-new-boise-areas-and-meridian", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/media-news/fatbeam-fiber-expands-fiber-network-to-new-boise-areas-and-meridian" },
+            { label: "Network Scale", value: "150K+ fiber miles across 8 states", source: "Fat Beam — homepage 'who we are' section", sourceUrl: "https://www.fatbeamfiber.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.fatbeamfiber.com/" }
         ]
     },
     {
@@ -133,12 +133,12 @@ const OPERATOR_PROFILES = [
         shortName: "Emerald",
         color: "#8B5CF6",
         metrics: [
-            { label: "Structure", value: "Public Benefit Corporation", source: "Emerald Broadband", sourceUrl: "https://www.emeraldbroadband.com/" },
-            { label: "Service Area", value: "Eugene/Springfield, OR", source: "Emerald Broadband", sourceUrl: "https://www.emeraldbroadband.com/" },
-            { label: "Technology", value: "FTTP", source: "Emerald Broadband", sourceUrl: "https://www.emeraldbroadband.com/" },
-            { label: "Key Markets", value: "River Road, Whiteaker, South Eugene, Oakridge", source: "Emerald Broadband", sourceUrl: "https://www.emeraldbroadband.com/" },
-            { label: "Mission", value: "Bridge digital divide; lowest-cost fiber in Eugene", source: "Emerald Broadband", sourceUrl: "https://www.emeraldbroadband.com/" },
-            { label: "Model", value: "Community-driven: residents mark interest for future builds", source: "Lookout Eugene", sourceUrl: "https://lookouteugene-springfield.com/story/latest-news/2025/05/13/emerald-broadband-brings-the-future-of-internet-to-oregon-why-its-time-to-ditch-cable-for-local-fiber/" }
+            { label: "Structure", value: "Public Benefit Corporation", source: "Emerald Broadband — about section", sourceUrl: "https://www.emeraldbroadband.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.emeraldbroadband.com/" },
+            { label: "Service Area", value: "Eugene/Springfield, OR", source: "Emerald Broadband — coverage map", sourceUrl: "https://www.emeraldbroadband.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.emeraldbroadband.com/" },
+            { label: "Technology", value: "FTTP", source: "Emerald Broadband — service page", sourceUrl: "https://www.emeraldbroadband.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.emeraldbroadband.com/" },
+            { label: "Key Markets", value: "River Road, Whiteaker, South Eugene, Oakridge", source: "Emerald Broadband — neighborhoods page", sourceUrl: "https://www.emeraldbroadband.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.emeraldbroadband.com/" },
+            { label: "Mission", value: "Bridge digital divide; lowest-cost fiber in Eugene", source: "Emerald Broadband — mission statement", sourceUrl: "https://www.emeraldbroadband.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.emeraldbroadband.com/" },
+            { label: "Model", value: "Community-driven: residents mark interest for future builds", source: "Lookout Eugene (May 2025) — 'Emerald Broadband brings the future of internet to Oregon'", sourceUrl: "https://lookouteugene-springfield.com/story/latest-news/2025/05/13/emerald-broadband-brings-the-future-of-internet-to-oregon-why-its-time-to-ditch-cable-for-local-fiber/", archiveUrl: "https://web.archive.org/web/2025/https://lookouteugene-springfield.com/story/latest-news/2025/05/13/emerald-broadband-brings-the-future-of-internet-to-oregon-why-its-time-to-ditch-cable-for-local-fiber/" }
         ]
     },
     {
@@ -147,25 +147,13 @@ const OPERATOR_PROFILES = [
         shortName: "TDS",
         color: "#1D4ED8",
         metrics: [
-            { label: "Total Passings (national)", value: "~1.1M fiber + 300K copper", source: "TDS Telecom", sourceUrl: "https://tdstelecom.com/" },
-            { label: "PNW Markets", value: "Bend, OR; select WA/ID communities", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
-            { label: "Technology", value: "FTTP (new) + HFC/Copper (legacy)", source: "TDS Telecom", sourceUrl: "https://tdstelecom.com/shop/internet.html" },
-            { label: "Ownership", value: "Telephone & Data Systems (NYSE: TDS)", source: "TDS Investor Relations", sourceUrl: "https://www.tdsinc.com/investors" },
-            { label: "Montana Build", value: "150K+ fiber locations; Billings, Great Falls, Helena, Missoula, Butte, Laurel", source: "TDS Telecom", sourceUrl: "https://tdsfiber.com/build/billings-mt/" },
-            { label: "Spokane Build", value: "88K premises, 1,100 mi fiber in Spokane metro", source: "TDS Telecom", sourceUrl: "https://www.fierce-network.com/broadband/tds-telecom-targets-fiber-110k-big-sky-country-and-beyond" },
-            { label: "MT Customers", value: "10,000+ MT customers (Feb 2026)", source: "FiberBroadband.org", sourceUrl: "https://fiberbroadband.org/2026/02/03/tds-celebrates-10000-montana-customers/" }
-        ]
-    },
-    {
-        id: "sparklight",
-        name: "Sparklight (Cable One)",
-        shortName: "Sparklight",
-        color: "#7C3AED",
-        metrics: [
-            { label: "PNW Markets", value: "ID (Boise suburbs, Caldwell, Nampa, Twin Falls)", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
-            { label: "Technology", value: "HFC (DOCSIS 3.1) + some FTTP", source: "Sparklight", sourceUrl: "https://www.sparklight.com/" },
-            { label: "Key Markets", value: "Caldwell, Nampa, Twin Falls, Pocatello, Idaho Falls", source: "Sparklight", sourceUrl: "https://www.sparklight.com/" },
-            { label: "Ownership", value: "Cable One Inc. (NYSE: CABO)", source: "Cable One", sourceUrl: "https://www.cableone.biz/" }
+            { label: "Total Passings (national)", value: "~1.1M fiber + 300K copper", source: "TDS Telecom — investor presentations", sourceUrl: "https://tdstelecom.com/", archiveUrl: "https://web.archive.org/web/2026/https://tdstelecom.com/" },
+            { label: "PNW Markets", value: "Bend, OR; Spokane, WA; Billings/Great Falls/Missoula, MT", source: "FCC BDC — broadband availability map", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
+            { label: "Technology", value: "FTTP (new) + HFC/Copper (legacy)", source: "TDS Telecom — internet plans page", sourceUrl: "https://tdstelecom.com/shop/internet.html", archiveUrl: "https://web.archive.org/web/2026/https://tdstelecom.com/shop/internet.html" },
+            { label: "Ownership", value: "Telephone & Data Systems (NYSE: TDS)", source: "TDS Inc. — investor relations page", sourceUrl: "https://www.tdsinc.com/investors", archiveUrl: "https://web.archive.org/web/2026/https://www.tdsinc.com/investors" },
+            { label: "Montana Build", value: "150K+ fiber locations; Billings, Great Falls, Helena, Missoula, Butte, Laurel", source: "Fierce Network (Mar 2023) — 'TDS Telecom targets fiber to 150K in Big Sky Country'", sourceUrl: "https://www.fierce-network.com/broadband/tds-telecom-targets-fiber-110k-big-sky-country-and-beyond", archiveUrl: "https://web.archive.org/web/2025/https://www.fierce-network.com/broadband/tds-telecom-targets-fiber-110k-big-sky-country-and-beyond" },
+            { label: "Spokane Build", value: "88K premises, 1,100 mi fiber in Spokane metro", source: "Fierce Network (Mar 2023) — ¶ 'Spokane metro' section of same article", sourceUrl: "https://www.fierce-network.com/broadband/tds-telecom-targets-fiber-110k-big-sky-country-and-beyond", archiveUrl: "https://web.archive.org/web/2025/https://www.fierce-network.com/broadband/tds-telecom-targets-fiber-110k-big-sky-country-and-beyond" },
+            { label: "MT Customers", value: "10,000+ MT customers (Feb 2026)", source: "FiberBroadband.org (Feb 2026) — 'TDS celebrates 10,000 Montana customers'", sourceUrl: "https://fiberbroadband.org/2026/02/03/tds-celebrates-10000-montana-customers/", archiveUrl: "https://web.archive.org/web/2026/https://fiberbroadband.org/2026/02/03/tds-celebrates-10000-montana-customers/" }
         ]
     },
     {
@@ -174,12 +162,12 @@ const OPERATOR_PROFILES = [
         shortName: "AT&T",
         color: "#6B7280",
         metrics: [
-            { label: "PNW Legacy Footprint", value: "WA, OR, ID, MT (ILEC territory)", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
-            { label: "Acquisition", value: "AT&T closed $5.75B deal for Lumen consumer fiber Feb 2, 2026", source: "AT&T Newsroom", sourceUrl: "https://about.att.com/story/2026/att-lumen-deal-close.html" },
-            { label: "Brand Transition", value: "Quantum Fiber from AT&T → AT&T Fiber (2-year TSA)", source: "Light Reading", sourceUrl: "https://www.lightreading.com/broadband/att-closes-5-75b-lumen-mass-markets-deal" },
-            { label: "AT&T Fiber Target", value: "60M+ fiber locations by 2030 (national)", source: "AT&T Investor Day", sourceUrl: "https://investors.att.com/" },
-            { label: "FCC Filing ID", value: "130228 (CenturyLink legacy — AT&T won't refile until D25/J26)", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/" },
-            { label: "Remaining Lumen", value: "Enterprise/wholesale only post-consumer sale", source: "Lumen Technologies", sourceUrl: "https://www.lumen.com/" }
+            { label: "PNW Legacy Footprint", value: "WA, OR, ID, MT (ILEC territory)", source: "FCC BDC — broadband availability map", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
+            { label: "Acquisition", value: "AT&T closed $5.75B deal for Lumen consumer fiber Feb 2, 2026", source: "AT&T Newsroom (Feb 2026) — official close announcement", sourceUrl: "https://about.att.com/story/2026/att-lumen-deal-close.html", archiveUrl: "https://web.archive.org/web/2026/https://about.att.com/story/2026/att-lumen-deal-close.html" },
+            { label: "Brand Transition", value: "Quantum Fiber from AT&T → AT&T Fiber (2-year TSA)", source: "Light Reading — 'AT&T closes $5.75B Lumen mass markets deal'", sourceUrl: "https://www.lightreading.com/broadband/att-closes-5-75b-lumen-mass-markets-deal", archiveUrl: "https://web.archive.org/web/2026/https://www.lightreading.com/broadband/att-closes-5-75b-lumen-mass-markets-deal" },
+            { label: "AT&T Fiber Target", value: "60M+ fiber locations by 2030 (national)", source: "AT&T Investor Day — strategic plan", sourceUrl: "https://investors.att.com/", archiveUrl: "https://web.archive.org/web/2026/https://investors.att.com/" },
+            { label: "FCC Filing ID", value: "130228 (CenturyLink legacy — AT&T won't refile until D25/J26)", source: "FCC BDC — entity search", sourceUrl: "https://broadbandmap.fcc.gov/" },
+            { label: "Remaining Lumen", value: "Enterprise/wholesale only post-consumer sale", source: "Lumen Technologies — corporate overview", sourceUrl: "https://www.lumen.com/", archiveUrl: "https://web.archive.org/web/2026/https://www.lumen.com/" }
         ]
     },
     {
@@ -187,11 +175,11 @@ const OPERATOR_PROFILES = [
         name: "Comcast Xfinity",
         shortName: "Comcast",
         color: "#E11D48",
+        hiddenFromProfiles: true,
         metrics: [
             { label: "PNW Footprint", value: "WA, OR (major cable incumbent)", source: "FCC BDC", sourceUrl: "https://broadbandmap.fcc.gov/data-download/nationwide-data" },
             { label: "Technology", value: "HFC (DOCSIS 4.0 upgrade) + FTTP edge-outs", source: "Comcast", sourceUrl: "https://www.xfinity.com/" },
             { label: "Key Markets", value: "Seattle, Portland, Tacoma, Bellevue, Everett", source: "BroadbandNow", sourceUrl: "https://broadbandnow.com/Comcast" },
-            { label: "Speeds", value: "Up to 2 Gbps (HFC), 6 Gbps (FTTP where available)", source: "Xfinity", sourceUrl: "https://www.xfinity.com/learn/internet-service/speeds" },
             { label: "Ownership", value: "Comcast Corp. (NASDAQ: CMCSA)", source: "Comcast", sourceUrl: "https://corporate.comcast.com/" }
         ]
     }
